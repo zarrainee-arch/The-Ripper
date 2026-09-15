@@ -1,10 +1,13 @@
 [gd_scene format=3 uid="uid://de55p51ilmuue"]
 
-[ext_resource type="Script" uid="uid://d2pfpe6pr270v" path="res://grid.gd" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://vy6a0x0waruh" path="res://player.gd" id="2_0xm2m"]
-[ext_resource type="Script" uid="uid://cb1wsfvk5osyt" path="res://npc.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://d2pfpe6pr270v" path="res://scripts/grid.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dfwr56ot7yagu" path="res://game.gd" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://vy6a0x0waruh" path="res://scripts/player.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cb1wsfvk5osyt" path="res://scripts/npc.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://dx711mx7drp3k" path="res://scripts/ai_stats.gd" id="4_1bvp3"]
 
 [node name="Game" type="Node2D" unique_id=360445328]
+script = ExtResource("1_lquwl")
 
 [node name="Grid" type="Node2D" parent="." unique_id=25619696]
 script = ExtResource("1_ig7tw")
@@ -15,3 +18,20 @@ script = ExtResource("2_0xm2m")
 
 [node name="NPC" type="CharacterBody2D" parent="." unique_id=279480073]
 script = ExtResource("3_h2yge")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1405762247]
+
+[node name="AIStats" type="Label" parent="CanvasLayer" unique_id=410134409]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Algorithm: UCS
+Path Cost: 0
+Expanded Nodes: 0"
+script = ExtResource("4_1bvp3")
+
+[node name="GameMessage" type="Label" parent="CanvasLayer" unique_id=1442928169]
+offset_left = 500.0
+offset_top = 300.0
+offset_right = 780.0
+offset_bottom = 380.0
+horizontal_alignment = 1

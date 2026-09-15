@@ -14,6 +14,9 @@ var current_path: Array[Vector2i] = []
 var path_index = 0
 var replan_timer = 0.0
 
+var last_path_cost = 0
+var last_expanded_nodes: Array[Vector2i] = []
+
 
 func _ready():
 	position = Vector2(100, 400)
@@ -51,6 +54,10 @@ func update_path():
 
 	current_path = result["path"]
 	path_index = 0
+
+	last_path_cost = result["cost"]
+	last_expanded_nodes = result["expanded_nodes"]
+	var last_algorithm = "UCS"
 
 
 func follow_path():
