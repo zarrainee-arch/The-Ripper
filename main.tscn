@@ -19,6 +19,7 @@ script = ExtResource("2_0xm2m")
 
 [node name="NPC" type="CharacterBody2D" parent="." unique_id=279480073]
 script = ExtResource("3_h2yge")
+algorithm = "A*"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1405762247]
 
