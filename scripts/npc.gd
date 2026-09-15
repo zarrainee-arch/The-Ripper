@@ -2,20 +2,37 @@ extends CharacterBody2D
 
 
 const UCS = preload("res://scripts/ucs.gd")
+const ASTAR = preload("res://scripts/astar.gd")
+const HEURISTIC = preload("res://scripts/heuristic.gd")
+
 
 const SPEED = 100.0
 const REPLAN_INTERVAL = 0.3
 
+
+@export_enum("UCS", "A*")
+var algorithm: String = "UCS"
+
+@export_enum("Manhattan", "Euclidean")
+var heuristic_type: String = "Manhattan"
+
+
 var grid
 var player
 var ucs
+var astar
+var heuristic
+
 
 var current_path: Array[Vector2i] = []
 var path_index = 0
 var replan_timer = 0.0
 
+
 var last_path_cost = 0
 var last_expanded_nodes: Array[Vector2i] = []
+var last_algorithm = "UCS"
+var last_heuristic = "Manhattan"
 
 
 func _ready():
@@ -24,7 +41,18 @@ func _ready():
 	grid = get_parent().get_node("Grid")
 	player = get_parent().get_node("Player")
 
+	# Inisialisasi UCS
 	ucs = UCS.new(grid)
+
+	# Inisialisasi A*
+	astar = ASTAR.new()
+
+	# Inisialisasi heuristic
+	heuristic = HEURISTIC.new()
+	heuristic.heuristic_type = heuristic_type
+
+	last_algorithm = algorithm
+	last_heuristic = heuristic_type
 
 	queue_redraw()
 
@@ -41,6 +69,9 @@ func _physics_process(delta):
 
 
 func update_path():
+	print("ALGORITHM: ", algorithm)
+	print("HEURISTIC: ", heuristic_type)
+	
 	var start = grid.world_to_cell(position)
 	var goal = grid.world_to_cell(player.position)
 
@@ -50,14 +81,33 @@ func update_path():
 	if not grid.is_walkable(goal):
 		return
 
-	var result = ucs.find_path(start, goal)
+	var result: Dictionary
 
+	# Pilih algoritma
+	if algorithm == "UCS":
+		result = ucs.find_path(start, goal)
+
+		last_algorithm = "UCS"
+		last_heuristic = "None"
+
+	else:
+		heuristic.heuristic_type = heuristic_type
+		result = astar.find_path(grid, start, goal, heuristic)
+
+		last_algorithm = "A*"
+		last_heuristic = heuristic_type
+
+	# Simpan hasil pencarian
 	current_path = result["path"]
 	path_index = 0
 
-	last_path_cost = result["cost"]
+	# Format hasil UCS dan A* berbeda
+	if algorithm == "UCS":
+		last_path_cost = result["cost"]
+	else:
+		last_path_cost = result["path_cost"]
+
 	last_expanded_nodes = result["expanded_nodes"]
-	var last_algorithm = "UCS"
 
 
 func follow_path():

@@ -31,8 +31,8 @@ func find_path(grid, start: Vector2i, goal: Vector2i, heuristic) -> Dictionary:
 	# Menentukan heuristic yang dipakai
 	# Jika heurstic tidak tersedia, A* akan menggunakan h(n) = 0
 	if heuristic:
-		if heuristic.has_method("get_name"):
-			heuristic_name = heuristic.get_name()
+		if heuristic.has_method("get_heuristic_name"):
+			heuristic_name = heuristic.get_heuristic_name()
 		elif "name" in heuristic:
 			heuristic_name = heuristic.name
 		else:
