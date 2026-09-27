@@ -215,4 +215,3 @@ func create_result() -> Dictionary:
 		"heuristic": heuristic_name,
 		"search_time_usec": search_time_usec
 	}
-
