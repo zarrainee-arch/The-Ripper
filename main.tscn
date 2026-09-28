@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cb1wsfvk5osyt" path="res://scripts/npc.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://dx711mx7drp3k" path="res://scripts/ai_stats.gd" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://cryk40dgwcg4l" path="res://scripts/visualization.gd" id="6_7mycd"]
+[ext_resource type="Script" uid="uid://c16hpltv3wdxj" path="res://scripts/battle/battle_system.gd" id="7_272bh"]
 
 [node name="Game" type="Node2D" unique_id=360445328]
 script = ExtResource("1_lquwl")
@@ -40,3 +41,6 @@ horizontal_alignment = 1
 
 [node name="Visualization" type="Node2D" parent="." unique_id=68849238]
 script = ExtResource("6_7mycd")
+
+[node name="BattleSystem" type="Node" parent="." unique_id=354436078]
+script = ExtResource("7_272bh")
