@@ -17,15 +17,20 @@ func  _init(depth: int = 3):
 func find_best_action(state, evaluation) -> Dictionary:
     # Menyimpan waktu ketika pencarian dimulai, untuk menghitung lama proses Minimax
     var start_time = Time.get_ticks_usec()
+    
     # Reset jumlah node setiap kali pencarian dimulai
     node_count = 0
+    
     # Action terbaik yang ditemukan
     var best_action = null
+    
     # Score terbaik untuk NPC
     # Karena NPC adalah Max player, nilai awal dibuat -INF agar score pertama yang ditemukan dapat menggantikannya
     var best_score = -INF
+    
     # Dictionary untuk menyimpan score dari setiap action pada root
     var action_scores: Dictionary = {}
+    
     # Mengambil semua action yang tersedia untuk NPC
     var acctions = state.get_available_actions()
 

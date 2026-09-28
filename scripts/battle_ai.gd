@@ -3,9 +3,11 @@ class_name BattleAI
 
 # Algoritma yang digunakan
 var algorithm: String = "minimax"
+
 # Depth maksimum pencarin
 var depth: int = 3
 
+# Objek algoritma Minimax dan Aplha-Beta
 var minimax
 var alpha_beta
 
