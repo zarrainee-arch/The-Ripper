@@ -32,7 +32,7 @@ func find_best_action(state, evaluation) -> Dictionary:
     var action_scores: Dictionary = {}
     
     # Mengambil semua action yang tersedia untuk NPC
-    var acctions = state.get_available_actions()
+    var actions = state.get_available_actions()
 
     # Jika tidak ada action atau battle sudah berada pada pada kondisi terminal, tidak perlu melakukan pencarian
     if actions.is_empty() or state.is_terminal():
@@ -42,7 +42,7 @@ func find_best_action(state, evaluation) -> Dictionary:
         return{
             "best_action": null,
             "best_score": evaluation.evaluate(state),
-            "nodee_count": node_count,
+            "node_count": node_count,
             "depth": max_depth,
             "action_scores": {},
             "execution_time_ms": time_ms
@@ -67,7 +67,7 @@ func find_best_action(state, evaluation) -> Dictionary:
         "best_action": best_action,
         "best_score": best_score,
         "node_count": node_count,
-        "depth" = max_depth,
+        "depth": max_depth,
         "action_scores": action_scores,
         "execution_time_ms": time_ms
     }
@@ -89,7 +89,7 @@ func _max_value(state, depth:int, evaluation) -> float:
     # Nilai awal Max dibuat sangat kecil, agar action pertama yang dimiliki score lebih besar dapat menggantikan nilai ini
     var value = -INF
     # Memeriksa action yang ada
-    for action in action:
+    for action in actions:
         # Membuat state simulasi dari action
         var next_state = state.apply_action_simulation(action)
         # Setelah Max/NPC memilih action, giliran berikutnya dianggap Min/lawan
@@ -106,15 +106,15 @@ func _min_value(state, depth:int, evaluation) -> float:
         return evaluation.evaluate(state)
 
     # Mengambil action yang tersedia
-    var action = state.get_available_actions()
+    var actions = state.get_available_actions()
     # Jika tidak ada action, state langsung dievaluasi
-    if actions.is_empty()::
+    if actions.is_empty():
         return evaluation.evaluate(state)
     
     # Nilai awal Min dibuat sangat besar, agar score pertama yang ditemukan dapat menjadi nilai minimum sementara
     var value = INF
     # Memeriksa seluruh action action yang tersedia
-    for actions in actions:
+    for action in actions:
         # Membuat state simulasi dari action
         var next_state = state.apply_action_simulation(action)
         # Setelah Min/lawan memilih action, giliran kembali dianggap milik Max/NPC

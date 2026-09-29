@@ -18,10 +18,10 @@ var execution_time_ms: float
 
 # Konstruktor untuk mengisi hasil pencarian
 func _init(action, score: float, nodes: int, search_depth: int, algorithm_name: String, scores_map: Dictionary = {}, time_ms: float = 0.0):
-    best_action = action,
-    best_score = score,
-    node_count = nodes,
-    depth = search_depth,
-    algorithm = algorithm_name,
-    action_scores = scores_map,
+    best_action = action
+    best_score = score
+    node_count = nodes
+    depth = search_depth
+    algorithm = algorithm_name
+    action_scores = scores_map
     execution_time_ms = time_ms

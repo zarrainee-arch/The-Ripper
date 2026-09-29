@@ -71,7 +71,7 @@ func find_best_action(state, evaluation) -> Dictionary:
 
     # Jika tidak ada action atau state sudah terminal, pencarian tidak perlu dilakukan
     if actions.is_empty() or state.is_terminal():
-        var time_ms = (Time.get_ticks_usec() - start_time)
+        var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
         # Mengembalikan evaluasi state saat ini
         return{
             "best_action": null,
@@ -93,20 +93,21 @@ func find_best_action(state, evaluation) -> Dictionary:
         action_scores[action] = score 
         # Menyimpan score lebih besar dari best_score, action tersebut menjadi pilihan terbaik
         if score > best_score: 
-            best_score = score,
+            best_score = score
             best_action = action 
         # Update alpha berdasarkan score terbaik
         alpha = max(alpha, best_score)
-        var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
-        # Mengembalikann hasil pencarian
-        return{
-            "best_action": best_action,
-            "best_score": best_score,
-            "node_count": node_count,
-            "depth": max_depth,
-            "action_scores": action_scores,
-            "execution_time_ms": time_ms
-        }
+    
+    var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
+    # Mengembalikann hasil pencarian
+    return{
+        "best_action": best_action,
+        "best_score": best_score,
+        "node_count": node_count,
+        "depth": max_depth,
+        "action_scores": action_scores,
+        "execution_time_ms": time_ms
+    }
 
 # Max digunakan untuk mensimulasikan NPC
 # NPC ingin mendapatkan nilai evaluasi terbesar
@@ -115,7 +116,7 @@ func _max_value(state, depth: int, alpha: float, beta: float, evaluation) -> flo
     node_count += 1
 
     # Jika depth sudah mencapai batas atau state terminal, langsung lakukan evaluasi
-    if dept >= max_depth or state.is_terminal():
+    if depth >= max_depth or state.is_terminal():
         return evaluation.evaluate(state)
     
     var actions = order_actions(state.get_available_actions())
