@@ -2,20 +2,152 @@
 
 [ext_resource type="Script" uid="uid://d2pfpe6pr270v" path="res://scripts/grid.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://binmp54mks7d6" path="res://Assets The Ripper/TERANG.png" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://dfwr56ot7yagu" path="res://game.gd" id="1_w48qg"]
 [ext_resource type="Script" uid="uid://vy6a0x0waruh" path="res://scripts/player.gd" id="2_0xm2m"]
 [ext_resource type="Script" uid="uid://cb1wsfvk5osyt" path="res://scripts/npc.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://cl0d8hbtyatfe" path="res://scripts/obstacle.gd" id="4_5vw27"]
 [ext_resource type="Texture2D" uid="uid://bps5xfbhpv4tu" path="res://Assets The Ripper/IdlePlayer.png" id="6_7mycd"]
 [ext_resource type="Texture2D" uid="uid://dn3083dwuxi4t" path="res://Assets The Ripper/IdleNPC.png" id="7_5vw27"]
+[ext_resource type="Texture2D" uid="uid://bwv7jcygu4q4f" path="res://Assets The Ripper/attackPlayer.png" id="7_vivmo"]
+[ext_resource type="Texture2D" uid="uid://btrgdp3n8vvlr" path="res://Assets The Ripper/Player.png" id="9_4c57u"]
+[ext_resource type="Texture2D" uid="uid://ch60el3le0swo" path="res://Assets The Ripper/panel.png" id="9_efxa6"]
 [ext_resource type="Script" uid="uid://balm7tyraqw7t" path="res://scripts/debug_overlay.gd" id="9_kek77"]
+[ext_resource type="Script" uid="uid://crltqrq5xtgu4" path="res://scripts/battle_ui.gd" id="9_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://bsthml0kfu4eq" path="res://Assets The Ripper/newattack.png" id="10_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://cr6otthskdth7" path="res://Assets The Ripper/The Ripper.png" id="10_efxa6"]
+[ext_resource type="Script" uid="uid://c16hpltv3wdxj" path="res://scripts/battle/battle_system.gd" id="13_w48qg"]
+[ext_resource type="AudioStream" uid="uid://bmefmx8dpp0xq" path="res://Assets The Ripper/Audio/ncone-mysterious-melody-loop-197040.mp3" id="17_yaehf"]
+[ext_resource type="AudioStream" uid="uid://dksd247flp2gv" path="res://Assets The Ripper/Audio/gargamel10-sword-slashing-game-sound-effect-1-379228.mp3" id="18_074og"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cqfq"]
+atlas = ExtResource("7_vivmo")
+region = Rect2(0, 0, 221, 221)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yaehf"]
+atlas = ExtResource("7_vivmo")
+region = Rect2(221, 0, 221, 221)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_074og"]
+atlas = ExtResource("7_vivmo")
+region = Rect2(442, 0, 221, 221)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cegan"]
+atlas = ExtResource("7_vivmo")
+region = Rect2(663, 0, 221, 221)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1u8w0"]
+atlas = ExtResource("7_vivmo")
+region = Rect2(0, 442, 221, 221)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_84bvq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cqfq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yaehf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_074og")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cegan")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1u8w0")
+}],
+"loop": 0,
+"name": &"Attack",
+"speed": 8.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_84bvq"]
 radius = 7.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_0odxb"]
+atlas = ExtResource("10_2cqfq")
+region = Rect2(204, 0, 204, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lswn8"]
+atlas = ExtResource("10_2cqfq")
+region = Rect2(408, 0, 204, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a6jrf"]
+atlas = ExtResource("10_2cqfq")
+region = Rect2(612, 0, 204, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xuqvo"]
+atlas = ExtResource("10_2cqfq")
+region = Rect2(816, 0, 204, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gdgnw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0odxb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lswn8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a6jrf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xuqvo")
+}],
+"loop": 0,
+"name": &"Attack",
+"speed": 8.0
+}]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdgnw"]
 radius = 7.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdgnw"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kek77"]
+bg_color = Color(0.65882355, 0.11372549, 0.13333334, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4c57u"]
+bg_color = Color(0.65882355, 0.11372549, 0.13333334, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efxa6"]
+bg_color = Color(0.38406006, 0.13322459, 0.109708756, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dg77c"]
+bg_color = Color(0.38431373, 0.13333334, 0.10980392, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycdy4"]
+bg_color = Color(0.38431373, 0.13333334, 0.10980392, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="Game" type="Node2D" unique_id=360445328]
+script = ExtResource("1_w48qg")
 metadata/_edit_horizontal_guides_ = [202.0]
 
 [node name="GroundMap2" type="Sprite2D" parent="." unique_id=1991564708]
@@ -113,26 +245,42 @@ scale = Vector2(0.2, 0.2)
 texture = ExtResource("6_7mycd")
 hframes = 8
 
+[node name="BattlePlayer" type="AnimatedSprite2D" parent="Player" unique_id=561529666]
+visible = false
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_84bvq")
+animation = &"Attack"
+frame_progress = 0.54874605
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=2073525097]
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CircleShape2D_84bvq")
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=528699897]
-zoom = Vector2(0.7, 0.7)
+zoom = Vector2(1.4, 1.4)
 limit_left = 0
 limit_top = 0
 limit_right = 1820
 limit_bottom = 720
 
 [node name="NPC" type="CharacterBody2D" parent="." unique_id=279480073]
-position = Vector2(900, 500)
+position = Vector2(1400, 500)
 scale = Vector2(1.083, 1.083)
 script = ExtResource("3_h2yge")
+pathfinding_mode = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="NPC" unique_id=1045065238]
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("7_5vw27")
 hframes = 8
+
+[node name="BattleNPC" type="AnimatedSprite2D" parent="NPC" unique_id=1542303404]
+visible = false
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_gdgnw")
+animation = &"Attack"
+frame = 3
+frame_progress = 0.17591438
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NPC" unique_id=433132044]
 scale = Vector2(1.1, 1.1)
@@ -141,3 +289,148 @@ disabled = true
 
 [node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=1465451785]
 script = ExtResource("9_kek77")
+
+[node name="BattleUI" type="CanvasLayer" parent="." unique_id=299928294]
+script = ExtResource("9_ycdy4")
+
+[node name="BattlePanel" type="Panel" parent="BattleUI" unique_id=1557023578]
+visible = false
+offset_left = 230.0
+offset_top = 470.0
+offset_right = 1050.0
+offset_bottom = 700.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gdgnw")
+
+[node name="PanelFrame" type="TextureRect" parent="BattleUI/BattlePanel" unique_id=960737882]
+layout_mode = 0
+offset_left = -65.0
+offset_top = -100.0
+offset_right = 885.0
+offset_bottom = 320.0
+texture = ExtResource("9_efxa6")
+expand_mode = 1
+
+[node name="PlayerInfo" type="VBoxContainer" parent="BattleUI/BattlePanel" unique_id=2080983622]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 25.0
+offset_right = 290.0
+offset_bottom = 115.0
+alignment = 1
+
+[node name="PlayerDetails" type="HBoxContainer" parent="BattleUI/BattlePanel/PlayerInfo" unique_id=207047530]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="PlayerPortrait" type="TextureRect" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails" unique_id=103870256]
+custom_minimum_size = Vector2(80, 70)
+layout_mode = 2
+texture = ExtResource("9_4c57u")
+expand_mode = 1
+
+[node name="PlayerStats" type="VBoxContainer" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails" unique_id=469879710]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayerName" type="Label" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails/PlayerStats" unique_id=1681924070]
+layout_mode = 2
+text = "PLAYER"
+
+[node name="PlayerHP" type="ProgressBar" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails/PlayerStats" unique_id=865705260]
+custom_minimum_size = Vector2(150, 18)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_kek77")
+value = 100.0
+
+[node name="NPCInfo" type="VBoxContainer" parent="BattleUI/BattlePanel" unique_id=1570678922]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 25.0
+offset_right = 790.0
+offset_bottom = 115.0
+alignment = 1
+
+[node name="NPCDetails" type="HBoxContainer" parent="BattleUI/BattlePanel/NPCInfo" unique_id=1346011535]
+layout_mode = 2
+alignment = 1
+
+[node name="NPCStats" type="VBoxContainer" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails" unique_id=143605776]
+layout_mode = 2
+alignment = 1
+
+[node name="NPCName" type="Label" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails/NPCStats" unique_id=1384060940]
+layout_mode = 2
+text = "THE RIPPER"
+horizontal_alignment = 2
+
+[node name="NPCHP" type="ProgressBar" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails/NPCStats" unique_id=647289603]
+custom_minimum_size = Vector2(150, 18)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_4c57u")
+value = 100.0
+
+[node name="NPCPortrait" type="TextureRect" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails" unique_id=2115292054]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+texture = ExtResource("10_efxa6")
+expand_mode = 1
+
+[node name="TurnLabel" type="Label" parent="BattleUI/BattlePanel" unique_id=9266374]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 65.0
+offset_right = 480.0
+offset_bottom = 100.0
+text = "YOUR TURN"
+horizontal_alignment = 1
+
+[node name="ActionButtons" type="HBoxContainer" parent="BattleUI/BattlePanel" unique_id=973820187]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 150.0
+offset_right = 560.0
+offset_bottom = 198.0
+alignment = 1
+
+[node name="AttackButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=1095507215]
+custom_minimum_size = Vector2(95, 48)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_efxa6")
+text = "ATTACK
+"
+
+[node name="DefendButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=1229654913]
+custom_minimum_size = Vector2(95, 48)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_dg77c")
+text = "DEFEND"
+
+[node name="PotionButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=2135776452]
+custom_minimum_size = Vector2(95, 48)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ycdy4")
+text = "POTION
+"
+
+[node name="ResultLabel" type="Label" parent="BattleUI" unique_id=980908079]
+visible = false
+offset_left = 490.0
+offset_top = 50.0
+offset_right = 790.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 32
+text = "VICTORY!"
+horizontal_alignment = 1
+
+[node name="BattleSystem" type="Node" parent="." unique_id=237024084]
+script = ExtResource("13_w48qg")
+
+[node name="BattleActors" type="Node2D" parent="." unique_id=1964604707]
+
+[node name="GamePlayBGM" type="AudioStreamPlayer" parent="." unique_id=604171495]
+stream = ExtResource("17_yaehf")
+autoplay = true
+
+[node name="AttackSFX" type="AudioStreamPlayer" parent="." unique_id=1659333889]
+stream = ExtResource("18_074og")
