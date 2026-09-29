@@ -4,10 +4,10 @@ class_name BattleAI
 # Algoritma yang digunakan
 var algorithm: String = "minimax"
 
-# Depth maksimum pencarin
+# Depth maksimum pencarian
 var depth: int = 3
 
-# Objek algoritma Minimax dan Aplha-Beta
+# Objek algoritma Minimax dan Alpha-Beta
 var minimax
 var alpha_beta
 
@@ -25,7 +25,7 @@ func _init( selected_algorithm: String = "minimax", search_depth: int = 3):
 func set_action_order(order: Array) -> void:
     alpha_beta.set_action_order(order)
 
-# Fungsi untuk memintai ai mencari action terbaik (hanya untuk melakukan pencarian)
+# Fungsi untuk meminta ai mencari action terbaik (hanya untuk melakukan pencarian)
 func get_best_action(state, evaluation) -> SearchResult:
     # Untuk menampung hasil pencarian
     var result: Dictionary
@@ -38,11 +38,11 @@ func get_best_action(state, evaluation) -> SearchResult:
 
     # Mengubah dictionary hasil pencarian menjadi SearchResult
     return SearchResult.new(
-        result["best_action"],
-        result["best_score"],
-        result["node_count"],
-        result["depth"],
-        algorithm,
-        result["action_scores"],
+        result["best_action"]
+        result["best_score"]
+        result["node_count"]
+        result["depth"]
+        algorithm
+        result["action_scores"]
         result["execution_time_ms"]
     )
