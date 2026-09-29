@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qyqklhqphwre"
-path="res://.godot/imported/map.png.png-e71cdfb4dd0a6bd65d0abc8f615f76c7.ctex"
+uid="uid://ddj6kxopy10im"
+path="res://.godot/imported/WalkNPC.png-fe65ac2546be9888249657970da45343.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/map.png.png"
-dest_files=["res://.godot/imported/map.png.png-e71cdfb4dd0a6bd65d0abc8f615f76c7.ctex"]
+source_file="res://Assets The Ripper/WalkNPC.png"
+dest_files=["res://.godot/imported/WalkNPC.png-fe65ac2546be9888249657970da45343.ctex"]
 
 [params]
 

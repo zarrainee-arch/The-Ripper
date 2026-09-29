@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0k033agfj03h"
-path="res://.godot/imported/fiks.png.png-0bb3c2b99a39d8d50dbc86bd98005293.ctex"
+uid="uid://c18yq62gyf128"
+path="res://.godot/imported/AttackNPC.png-2f84afa18ce8d096a59ef9dc9c65f109.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fiks.png.png"
-dest_files=["res://.godot/imported/fiks.png.png-0bb3c2b99a39d8d50dbc86bd98005293.ctex"]
+source_file="res://Assets The Ripper/AttackNPC.png"
+dest_files=["res://.godot/imported/AttackNPC.png-2f84afa18ce8d096a59ef9dc9c65f109.ctex"]
 
 [params]
 
