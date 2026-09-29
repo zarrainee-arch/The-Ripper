@@ -13,13 +13,9 @@ const DEFEND_REDUCTION = 0.5
 const POTION_HEAL = 20
 
 var state: BattleState
-var player_defending = false
-var npc_defending = false
 
 func start_battle():
 	state = BattleState.new(MAX_HP, MAX_HP, "PLAYER")
-	player_defending = false
-	npc_defending = false
 	
 	print("=== BATTLE START ===")
 	print("Player HP: ", state.player_hp)
@@ -44,34 +40,40 @@ func execute_action(action: Action, actor: String):
 		Action.POTION:
 			potion(actor)
 
-	if not state.is_terminal():
-		change_turn()
+	if state.is_terminal():
+		end_battle()
+		return
+
+	change_turn()
+
+	if state.current_turn == "NPC":
+		npc_turn()
 
 func attack(actor: String):
 	var damage = ATTACK_DAMAGE
 
 	if actor == "PLAYER":
-		if npc_defending:
+		if state.npc_defending:
 			damage = int(damage * DEFEND_REDUCTION)
-			npc_defending = false
+			state.npc_defending = false
 
 		state.npc_hp = max(0, state.npc_hp - damage)
 		print("PLAYER attacks NPC for ", damage, " damage.")
 
 	elif actor == "NPC":
-		if player_defending:
+		if state.player_defending:
 			damage = int(damage * DEFEND_REDUCTION)
-			player_defending = false
+			state.player_defending = false
 
 		state.player_hp = max(0, state.player_hp - damage)
 		print("NPC attacks PLAYER for ", damage, " damage.")
 
 func defend(actor: String):
 	if actor == "PLAYER":
-		player_defending = true
+		state.player_defending = true
 		print("PLAYER defends.")
 	elif actor == "NPC":
-		npc_defending = true
+		state.npc_defending = true
 		print("NPC defends.")
 
 func potion(actor: String):
@@ -108,3 +110,25 @@ func _input(event):
 				execute_action(Action.DEFEND, "PLAYER")
 			KEY_P:
 				execute_action(Action.POTION, "PLAYER")
+				
+func npc_turn():
+	if state == null:
+		return
+
+	if state.is_terminal():
+		return
+
+	if state.current_turn != "NPC":
+		return
+
+	print("=== NPC TURN ===")
+
+	execute_action(Action.ATTACK, "NPC")
+	
+func end_battle():
+	print("=== BATTLE OVER ===")
+
+	if state.player_hp <= 0:
+		print("PLAYER DEFEATED")
+	elif state.npc_hp <= 0:
+		print("NPC DEFEATED")

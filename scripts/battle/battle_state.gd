@@ -5,6 +5,9 @@ var player_hp: int
 var npc_hp: int
 var current_turn: String
 
+var player_defending: bool
+var npc_defending: bool
+
 func _init(
 	player_hp_value: int = 100,
 	npc_hp_value: int = 100,
@@ -13,6 +16,9 @@ func _init(
 	player_hp = player_hp_value
 	npc_hp = npc_hp_value
 	current_turn = turn_value
+
+	player_defending = false
+	npc_defending = false
 
 func is_terminal() -> bool:
 	return player_hp <= 0 or npc_hp <= 0
