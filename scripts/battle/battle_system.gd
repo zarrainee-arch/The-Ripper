@@ -13,10 +13,14 @@ const DEFEND_REDUCTION = 0.5
 const POTION_HEAL = 20
 
 var state: BattleState
+var battle_ai: BattleAI
+var evaluation: BattleEvaluation
 
 func start_battle():
 	state = BattleState.new(MAX_HP, MAX_HP, "PLAYER")
-	
+	battle_ai = BattleAI.new("minimax", 3)
+	evaluation = BattleEvaluation.new()
+
 	print("=== BATTLE START ===")
 	print("Player HP: ", state.player_hp)
 	print("NPC HP: ", state.npc_hp)
@@ -123,7 +127,25 @@ func npc_turn():
 
 	print("=== NPC TURN ===")
 
-	execute_action(Action.ATTACK, "NPC")
+	var result = battle_ai.get_best_action(state, evaluation)
+
+	if result == null:
+		print("NPC AI could not find an action.")
+		return
+
+	print("AI Algorithm: ", result.algorithm)
+	print("AI Depth: ", result.depth)
+	print("AI Best Action: ", result.best_action)
+	print("AI Best Score: ", result.best_score)
+	print("AI Node Count: ", result.node_count)
+	print("AI Search Time: ", result.execution_time_ms, " ms")
+	print("AI Action Scores: ", result.action_scores)
+
+	if result.best_action == null:
+		print("NPC AI returned no action.")
+		return
+
+	execute_action(result.best_action, "NPC")
 	
 func end_battle():
 	print("=== BATTLE OVER ===")
