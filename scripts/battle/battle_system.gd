@@ -18,7 +18,7 @@ var evaluation: BattleEvaluation
 
 func start_battle():
 	state = BattleState.new(MAX_HP, MAX_HP, "PLAYER")
-	battle_ai = BattleAI.new("minimax", 3)
+	battle_ai = BattleAI.new("alpha_beta", 3)
 	evaluation = BattleEvaluation.new()
 
 	print("=== BATTLE START ===")
