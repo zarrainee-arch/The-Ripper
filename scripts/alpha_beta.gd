@@ -10,16 +10,13 @@ var max_depth: int = 3
 # Menyimpan urutan action yang ingin diprioritaskan
 var action_order: Array = []
 
-
 # Konstruktor untuk menentukan depth
 func _init(depth: int = 3):
 	max_depth = depth
 
-
 # Mengatur urutan action untuk eksperimen action ordering
 func set_action_order(order: Array) -> void:
 	action_order = order.duplicate()
-
 
 # Mengurutkan action berdasarkan action_order
 func order_actions(actions: Array) -> Array:
@@ -41,11 +38,9 @@ func order_actions(actions: Array) -> Array:
 
 	return ordered
 
-
 # Mencari action terbaik NPC menggunakan Minimax + Alpha-Beta pruning
 func find_best_action(state, evaluation) -> Dictionary:
 	var start_time = Time.get_ticks_usec()
-
 	# Reset jumlah node untuk pencarian baru
 	node_count = 0
 
@@ -57,7 +52,6 @@ func find_best_action(state, evaluation) -> Dictionary:
 
 	# Batas bawah untuk Max/NPC
 	var alpha = -INF
-
 	# Batas atas untuk Min/lawan
 	var beta = INF
 
@@ -67,7 +61,6 @@ func find_best_action(state, evaluation) -> Dictionary:
 	# Jika tidak ada action atau state sudah terminal
 	if actions.is_empty() or state.is_terminal():
 		var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
-
 		return {
 			"best_action": null,
 			"best_score": evaluation.evaluate(state),
@@ -82,15 +75,8 @@ func find_best_action(state, evaluation) -> Dictionary:
 		# Membuat state simulasi
 		var next_state = state.apply_action_simulation(action)
 
-		# Setelah NPC memilih action,
-		# pencarian dilanjutkan sebagai Min/lawan
-		var score = _min_value(
-			next_state,
-			1,
-			alpha,
-			beta,
-			evaluation
-		)
+		# Setelah NPC memilih action, pencarian dilanjutkan sebagai Min/lawan
+		var score = _min_value(next_state, 1, alpha, beta, evaluation)
 
 		# Menyimpan score action
 		action_scores[action] = score
@@ -104,9 +90,8 @@ func find_best_action(state, evaluation) -> Dictionary:
 		# Update alpha berdasarkan score terbaik
 		alpha = max(alpha, best_score)
 
-	# Menghitung waktu setelah SEMUA action selesai diperiksa
+	# Menghitung waktu setelah semua action selesai diperiksa
 	var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
-
 	return {
 		"best_action": best_action,
 		"best_score": best_score,
@@ -116,17 +101,9 @@ func find_best_action(state, evaluation) -> Dictionary:
 		"execution_time_ms": time_ms
 	}
 
-
 # Max digunakan untuk mensimulasikan NPC
 # NPC ingin mendapatkan nilai evaluasi terbesar
-func _max_value(
-	state,
-	depth: int,
-	alpha: float,
-	beta: float,
-	evaluation
-) -> float:
-
+func _max_value(state, depth: int, alpha: float, beta: float, evaluation) -> float:
 	node_count += 1
 
 	# Jika depth sudah mencapai batas atau state terminal
@@ -134,7 +111,6 @@ func _max_value(
 		return evaluation.evaluate(state)
 
 	var actions = order_actions(state.get_available_actions())
-
 	# Tidak ada action tersedia
 	if actions.is_empty():
 		return evaluation.evaluate(state)
@@ -147,17 +123,10 @@ func _max_value(
 		var next_state = state.apply_action_simulation(action)
 
 		# Setelah Max memilih action, lanjut ke Min
-		var score = _min_value(
-			next_state,
-			depth + 1,
-			alpha,
-			beta,
-			evaluation
-		)
+		var score = _min_value(next_state, depth + 1, alpha, beta, evaluation)
 
 		# Max mengambil score terbesar
 		value = max(value, score)
-
 		# Alpha menyimpan nilai terbaik yang diketahui Max
 		alpha = max(alpha, value)
 
@@ -170,14 +139,7 @@ func _max_value(
 
 # Min digunakan untuk mensimulasikan lawan
 # Lawan dianggap memilih nilai terkecil dari sudut pandang NPC
-func _min_value(
-	state,
-	depth: int,
-	alpha: float,
-	beta: float,
-	evaluation
-) -> float:
-
+func _min_value(state, depth: int, alpha: float, beta: float, evaluation) -> float:
 	node_count += 1
 
 	# Jika depth sudah mencapai batas atau state terminal
@@ -185,7 +147,6 @@ func _min_value(
 		return evaluation.evaluate(state)
 
 	var actions = order_actions(state.get_available_actions())
-
 	# Tidak ada action tersedia
 	if actions.is_empty():
 		return evaluation.evaluate(state)
@@ -199,17 +160,10 @@ func _min_value(
 
 		# Setelah Min memilih action,
 		# pencarian kembali ke Max
-		var score = _max_value(
-			next_state,
-			depth + 1,
-			alpha,
-			beta,
-			evaluation
-		)
+		var score = _max_value(next_state, depth + 1, alpha, beta, evaluation)
 
 		# Min mengambil score terkecil
 		value = min(value, score)
-
 		# Beta menyimpan nilai terbaik yang diketahui Min
 		beta = min(beta, value)
 

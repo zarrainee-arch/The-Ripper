@@ -37,7 +37,6 @@ func find_best_action(state, evaluation) -> Dictionary:
 	# Jika tidak ada action atau battle sudah berada pada kondisi terminal
 	if actions.is_empty() or state.is_terminal():
 		var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
-
 		return {
 			"best_action": null,
 			"best_score": evaluation.evaluate(state),
@@ -63,7 +62,6 @@ func find_best_action(state, evaluation) -> Dictionary:
 
 	# Menghitung total waktu pencarian
 	var time_ms = (Time.get_ticks_usec() - start_time) / 1000.0
-
 	return {
 		"best_action": best_action,
 		"best_score": best_score,
@@ -99,7 +97,6 @@ func _max_value(state, depth: int, evaluation) -> float:
 
 		# Setelah Max/NPC memilih action, giliran berikutnya dianggap Min/lawan
 		var score = _min_value(next_state, depth + 1, evaluation)
-
 		# Mengambil score terbesar
 		value = max(value, score)
 
@@ -133,7 +130,6 @@ func _min_value(state, depth: int, evaluation) -> float:
 		# Setelah Min/lawan memilih action,
 		# giliran kembali dianggap milik Max/NPC
 		var score = _max_value(next_state, depth + 1, evaluation)
-
 		# Memilih score terkecil
 		value = min(value, score)
 

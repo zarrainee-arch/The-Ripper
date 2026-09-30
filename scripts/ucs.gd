@@ -1,6 +1,5 @@
 extends RefCounted
 
-
 class QueueEntry:
 	var node: Vector2i
 	var cost: int
@@ -9,20 +8,16 @@ class QueueEntry:
 		node = node_position
 		cost = node_cost
 
-
 var grid
 var frontier: Array[QueueEntry] = []
 var cost_so_far: Dictionary = {}
 var came_from: Dictionary = {}
 
-
 func _init(grid_reference):
 	grid = grid_reference
 
-
 func push_frontier(node: Vector2i, cost: int):
 	frontier.append(QueueEntry.new(node, cost))
-
 
 func pop_lowest_cost() -> QueueEntry:
 	if frontier.is_empty():
@@ -35,7 +30,6 @@ func pop_lowest_cost() -> QueueEntry:
 			lowest_index = i
 
 	return frontier.pop_at(lowest_index)
-
 
 func find_path(start: Vector2i, goal: Vector2i) -> Dictionary:
 	frontier.clear()
