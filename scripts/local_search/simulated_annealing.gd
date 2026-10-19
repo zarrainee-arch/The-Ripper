@@ -1,219 +1,89 @@
 extends RefCounted
-class_name Optimizer
+class_name SimulatedAnnealing
 
-const FITNESS_EPSILON: float = 0.000000001
-const DEFAULT_HC_PARAMS: Dictionary = {
-	"max_iterations": 100,
-	"max_sideways_moves": 0
-}
-const DEFAULT_RR_PARAMS: Dictionary = {
-	"max_iterations": 100,
-	"max_sideways_moves": 0,
-	"max_restarts": 10
-}
-const DEFAULT_SA_PARAMS: Dictionary = {
-	"initial_temperature": 20.0,
-	"cooling_factor": 0.995,
-	"minimum_temperature": 0.01,
-	"max_iterations": 2000
-}
+const GOAL_REACHED := OptimizationResult.REASON_GOAL_REACHED
+const MAX_ITERATIONS := OptimizationResult.REASON_MAX_ITERATIONS
+const MIN_TEMPERATURE := OptimizationResult.REASON_MIN_TEMPERATURE
+const LOCAL_MAXIMUM := OptimizationResult.REASON_LOCAL_MAXIMUM
+const INVALID_PARAMETERS := OptimizationResult.REASON_INVALID_PARAMETERS
 
-var _problem
-var _hill_climbing: HillClimbing
-var _random_restart: RandomRestart
-var _simulated_annealing: SimulatedAnnealing
-var _evaluation_count: int = 0
+# Menjalankan Simulated Annealing untuk mencari konfigurasi terbaik.
+func search(initial_configuration, initial_fitness: float, target_difficulty: float, params: Dictionary, solver, rng: RandomNumberGenerator, on_progress: Callable = Callable()) -> Dictionary:
+	var temperature: float = float(params.get("initial_temperature", 20.0))
+	var cooling_factor: float = float(params.get("cooling_factor", 0.995))
+	var minimum_temperature: float = float(params.get("minimum_temperature", 0.01))
+	var max_iterations: int = maxi(0, int(params.get("max_iterations", 2000)))
 
-# Membuat objek problem dan algoritma pencarian.
-func _init() -> void:
-	_problem = LocalSearch.new()
-	_hill_climbing = HillClimbing.new()
-	_random_restart = RandomRestart.new()
-	_simulated_annealing = SimulatedAnnealing.new()
+	# Memastikan parameter suhu dan pendinginan valid.
+	if(not is_finite(temperature) or not is_finite(cooling_factor) or not is_finite(minimum_temperature) or temperature <= 0.0 or cooling_factor <= 0.0 or cooling_factor >= 1.0 or minimum_temperature < 0.0):
+		push_error("Parameter Simulated Annealing tidak valid.")
+		return _make_result(initial_configuration, initial_fitness, 0, INVALID_PARAMETERS)
 
-# Menjalankan algoritma yang dipilih dan menyusun hasil optimasi.
-func run(initial_configuration, target_difficulty: float, algorithm_name: String, params: Dictionary = {}, seed_value = null, on_progress: Callable = Callable()) -> OptimizationResult:
-	var start_time: int = Time.get_ticks_usec()
-	_evaluation_count = 0
+	var current = solver.copy_configuration(initial_configuration)
+	var current_fitness: float = initial_fitness
+	var best = solver.copy_configuration(initial_configuration)
+	var best_fitness: float = initial_fitness
+	var iteration_count: int = 0
 
-	# Memastikan algoritma yang dipilih didukung.
-	if not _is_supported_algorithm(algorithm_name):
-		push_error("Optimizer: Unknown algorithm: " + algorithm_name)
-		return _invalid_result(initial_configuration, target_difficulty, algorithm_name, params, OptimizationResult.REASON_INVALID_ALGORITHM, start_time)
+	# Mengembalikan hasil jika konfigurasi awal sudah memenuhi target.
+	if solver.is_goal(best, target_difficulty):
+		return _make_result(best, best_fitness, 0, GOAL_REACHED)
 
-	# Memvalidasi target difficulty.
-	if not is_finite(target_difficulty):
-		push_error("Optimizer: Target difficulty must be finite.")
-		return _invalid_result(initial_configuration, target_difficulty, algorithm_name, params, OptimizationResult.REASON_INVALID_TARGET, start_time)
+	while(temperature > minimum_temperature and iteration_count < max_iterations):
+		var neighbours: Array = solver.get_neighbours(current)
 
-	if target_difficulty < 0.0 or target_difficulty > 100.0:
-		push_error("Optimizer: Target difficulty must be between 0 and 100.")
-		return _invalid_result(initial_configuration, target_difficulty, algorithm_name, params, OptimizationResult.REASON_INVALID_TARGET, start_time)
+		# Menghentikan pencarian jika tidak ada tetangga.
+		if neighbours.is_empty():
+			return _make_result(best, best_fitness, iteration_count, LOCAL_MAXIMUM)
 
-	# Memvalidasi konfigurasi awal.
-	if not _problem.validate_configuration(initial_configuration):
-		push_error("Optimizer: Initial configuration is invalid.")
-		return _invalid_result(initial_configuration, target_difficulty, algorithm_name, params, OptimizationResult.REASON_INVALID_INITIAL, start_time)
+		# Memilih satu tetangga secara acak seragam.
+		var next_index: int = rng.randi_range(0, neighbours.size() - 1)
+		var next_configuration = neighbours[next_index]
+		var next_fitness: float = solver.evaluate_fitness(next_configuration, target_difficulty)
+		var delta_e: float = next_fitness - current_fitness
+		var accepted: bool = delta_e > 0.0
 
-	# Menggunakan seed yang diberikan atau membuat seed acak.
-	var actual_seed: int = -1
-	if seed_value != null:
-		actual_seed = int(seed_value)
+		# Menerima langkah yang lebih buruk berdasarkan probabilitas suhu.
+		if not accepted: 
+			accepted = rng.randf() < exp(delta_e / temperature)
 
-	if actual_seed < 0:
-		var seed_generator := RandomNumberGenerator.new()
-		seed_generator.randomize()
-		actual_seed = int(seed_generator.randi())
+		# Memperbarui konfigurasi saat ini jika langkah diterima.
+		if accepted:
+			current = solver.copy_configuration(next_configuration)
+			current_fitness = next_fitness
 
-	# Membuat satu RNG untuk seluruh proses pencarian.
-	var rng := RandomNumberGenerator.new()
-	rng.seed = actual_seed
+		# Memperbarui konfigurasi terbaik jika fitness meningkat.
+		if current_fitness > best_fitness:
+			best = solver.copy_configuration(current)
+			best_fitness = current_fitness
+		iteration_count += 1
 
-	var initial_copy = _problem.copy_configuration(initial_configuration)
-	var effective_params: Dictionary = _get_effective_params(algorithm_name, params)
-	var progress_callback: Callable = on_progress
+		# Mengirim perkembangan pencarian jika callback tersedia.
+		if on_progress.is_valid():
+			on_progress.call(iteration_count, current_fitness, best_fitness)
 
-	# Mengambil callback dari params jika callback langsung tidak diberikan.
-	if(not progress_callback.is_valid() and params.get("on_progress") is Callable):
-		progress_callback = params["on_progress"]
+		# Memeriksa target pada konfigurasi terbaik.
+		if solver.is_goal(best, target_difficulty):
+			return _make_result(best, best_fitness, iteration_count, GOAL_REACHED)
 
-	# Menghitung fitness konfigurasi awal satu kali.
-	var initial_fitness: float = evaluate_fitness(initial_copy, target_difficulty)
+		# Menurunkan suhu setelah satu iterasi selesai.
+		temperature *= cooling_factor
 
-	# Menghentikan pencarian jika konfigurasi awal sudah memenuhi target.
-	if is_goal(initial_copy, target_difficulty):
-		return _build_result(initial_copy, initial_fitness, 0, algorithm_name, initial_copy, target_difficulty, 0, start_time, actual_seed, OptimizationResult.REASON_GOAL_REACHED, effective_params)
+	# Memprioritaskan keberhasilan jika target sudah tercapai.
+	if solver.is_goal(best, target_difficulty):
+		return _make_result(best, best_fitness, iteration_count, GOAL_REACHED)
 
-	# Menjalankan algoritma sesuai pilihan.
-	var search_result: Dictionary = {}
-	if algorithm_name == LocalSearch.ALGORITHM_HILL_CLIMBING:
-		search_result = _hill_climbing.search(initial_copy, initial_fitness, target_difficulty, effective_params, self, progress_callback)
-	elif algorithm_name == LocalSearch.ALGORITHM_RANDOM_RESTART:
-		search_result = _random_restart.search(initial_copy, initial_fitness, target_difficulty, effective_params, self, rng, _hill_climbing, progress_callback)
-	elif algorithm_name == LocalSearch.ALGORITHM_SIMULATED_ANNEALING:
-		search_result = _simulated_annealing.search(initial_copy, initial_fitness, target_difficulty, effective_params, self, rng, progress_callback)
+	# Mengembalikan alasan penghentian sesuai kondisi terakhir.
+	if temperature <= minimum_temperature:
+		return _make_result(best, best_fitness, iteration_count, MIN_TEMPERATURE)
+	return _make_result(best, best_fitness, iteration_count, MAX_ITERATIONS)
 
-	# Mengambil seluruh informasi hasil dari algoritma.
-	var best_configuration = search_result.get("best_configuration", initial_copy)
-	var best_fitness: float = float(search_result.get("best_fitness", initial_fitness))
-	var iteration_count: int = int(search_result.get("iteration_count", 0))
-	var restart_count: int = int(search_result.get("restart_count", 0))
-	var termination_reason: String = str(search_result.get("termination_reason", "unknown"))
-
-	# Goal memiliki prioritas tertinggi sebagai alasan penghentian.
-	if is_goal(best_configuration, target_difficulty):
-		termination_reason = OptimizationResult.REASON_GOAL_REACHED
-
-	return _build_result(best_configuration, best_fitness, iteration_count, algorithm_name, initial_copy, target_difficulty, restart_count, start_time, actual_seed, termination_reason, effective_params)
-
-# Menghitung fitness sekaligus memperbarui penghitung evaluasi.
-func evaluate_fitness(configuration, target_difficulty: float) -> float:
-	_evaluation_count += 1
-	return float(_problem.calculate_fitness(configuration, target_difficulty))
-
-# Mengembalikan jumlah evaluasi fitness.
-func get_evaluation_count() -> int:
-	return _evaluation_count
-
-# Menyediakan fungsi fitness untuk algoritma pencarian.
-func calculate_fitness(configuration, target_difficulty: float) -> float:
-	return evaluate_fitness(configuration, target_difficulty)
-
-# Menghitung difficulty konfigurasi.
-func calculate_difficulty(configuration) -> float: 
-	return float(_problem.calculate_difficulty(configuration))
-
-# Mengambil semua tetangga konfigurasi.
-func get_neighbours(configuration) -> Array:
-	return _problem.get_neighbours(configuration)
-
-# Membuat konfigurasi acak menggunakan RNG yang sama.
-func random_configuration(rng: RandomNumberGenerator):
-	return _problem.random_configuration(rng)
-
-# Memilih tetangga secara acak menggunakan RNG yang sama.
-func random_neighbour(configuration, rng: RandomNumberGenerator):
-	return _problem.random_neighbour(configuration, rng)
-
-# Membuat salinan konfigurasi.
-func copy_configuration(configuration):
-	return _problem.copy_configuration(configuration)
-
-# Memvalidasi konfigurasi.
-func validate_configuration(configuration) -> bool:
-	return _problem.validate_configuration(configuration)
-
-# Memeriksa apakah difficulty berada dalam toleransi target.
-func is_goal(configuration, target_difficulty: float) -> bool:
-	if configuration == null:
-		return false
-	var difficulty: float = calculate_difficulty(configuration)
-	if not is_finite(difficulty):
-		return false
-	return absf(difficulty - target_difficulty) <= (LocalSearch.TOLERANCE + FITNESS_EPSILON)
-
-# Memeriksa apakah nama algoritma didukung.
-func _is_supported_algorithm(algorithm_name: String) -> bool:
-	return(algorithm_name == LocalSearch.ALGORITHM_HILL_CLIMBING or algorithm_name == LocalSearch.ALGORITHM_RANDOM_RESTART or algorithm_name == LocalSearch.ALGORITHM_SIMULATED_ANNEALING)
-
-# Menggabungkan parameter default dengan parameter dari pemanggil.
-func _get_effective_params(algorithm_name: String, params: Dictionary) -> Dictionary:
-	var effective_params: Dictionary = {}
-	if algorithm_name == LocalSearch.ALGORITHM_HILL_CLIMBING:
-		effective_params = DEFAULT_HC_PARAMS.duplicate(true)
-	elif algorithm_name == LocalSearch.ALGORITHM_RANDOM_RESTART:
-		effective_params = DEFAULT_RR_PARAMS.duplicate(true)
-	elif algorithm_name == LocalSearch.ALGORITHM_SIMULATED_ANNEALING:
-		effective_params = DEFAULT_SA_PARAMS.duplicate(true)
-	effective_params.merge(params, true)
-	effective_params.erase("on_progress")
-	return effective_params
-
-# Menyusun data pencarian menjadi OptimizationResult.
-func _build_result(best_configuration, best_fitness: float, iteration_count: int, algorithm_name: String, initial_configuration, target_difficulty: float, restart_count: int, start_time: int, actual_seed: int, termination_reason: String, effective_params: Dictionary) -> OptimizationResult: 
-	var result = OptimizationResult.new()
-	result.best_configuration = _problem.copy_configuration(best_configuration)
-	result.best_fitness = best_fitness
-	result.iteration_count = iteration_count
-	result.algorithm_name = algorithm_name
-	result.initial_configuration = _problem.copy_configuration(initial_configuration)
-	result.target_difficulty = target_difficulty
-	result.best_difficulty_score = calculate_difficulty(best_configuration)
-	result.evaluation_count = _evaluation_count
-	result.restart_count = restart_count
-	result.elapsed_ms = float(Time.get_ticks_usec() - start_time) / 1000.0
-	result.seed_used = actual_seed
-	result.success = is_goal(best_configuration, target_difficulty)
-
-	# Memprioritaskan goal jika konfigurasi terbaik memenuhi target.
-	if result.success:
-		result.termination_reason = OptimizationResult.REASON_GOAL_REACHED
-	else:
-		result.termination_reason = termination_reason
-
-	result.params_used = effective_params.duplicate(true)
-	return result
-
-# Membuat hasil untuk input yang tidak valid.
-func _invalid_result(initial_configuration, target_difficulty: float, algorithm_name: String, params: Dictionary, reason: String, start_time: int) -> OptimizationResult:
-	var result = OptimizationResult.new()
-	if(initial_configuration != null and _problem.validate_configuration(initial_configuration)):
-		result.initial_configuration = _problem.copy_configuration(initial_configuration)
-		result.best_configuration = _problem.copy_configuration(initial_configuration)
-
-	result.algorithm_name = algorithm_name
-	result.target_difficulty = target_difficulty
-	result.best_fitness = -1.0
-	result.best_difficulty_score = -1.0
-	result.evaluation_count = _evaluation_count
-	result.restart_count = 0
-	result.iteration_count = 0
-	result.seed_used = 0
-	result.success = false
-	result.termination_reason = reason
-	result.params_used = params.duplicate(true)
-
-	# Menyimpan durasi proses jika waktu mulai tersedia.
-	if start_time > 0:
-		result.elapsed_ms = float(Time.get_ticks_usec() - start_time) / 1000.0
-	return result
+# Menyusun hasil Simulated Annealing dalam bentuk Dictionary.
+func _make_result(configuration, fitness, iterations: int, reason: String) -> Dictionary:
+	return {
+		"best_configuration": configuration,
+		"best_fitness": fitness,
+		"iteration_count": iterations,
+		"restart_count": 0,
+		"termination_reason": reason
+	}
