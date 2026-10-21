@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://ccsp5vb85scha"]
+
+[ext_resource type="Texture2D" uid="uid://cilds3xb47yfs" path="res://Assets The Ripper/selectMenu/panel.png" id="1_efpx5"]
+[ext_resource type="Script" uid="uid://bx5y8aojhrpjc" path="res://select_difficulty.gd" id="1_sjyrp"]
+[ext_resource type="Texture2D" uid="uid://cagqk8nu420fe" path="res://Assets The Ripper/selectMenu/easyButton.png" id="2_bxvsn"]
+[ext_resource type="Texture2D" uid="uid://b03nh436nnfys" path="res://Assets The Ripper/selectMenu/mediumButton.png" id="3_0i50u"]
+[ext_resource type="Texture2D" uid="uid://bucvaegfui27q" path="res://Assets The Ripper/selectMenu/hardButton.png" id="4_dpmtu"]
+[ext_resource type="Texture2D" uid="uid://oebi1udi2ljh" path="res://Assets The Ripper/selectMenu/backButton.png" id="5_dpmtu"]
+[ext_resource type="Texture2D" uid="uid://b3vaqc606rmhm" path="res://Assets The Ripper/selectMenu/hoverBack.png" id="7_4na3v"]
+
+[node name="Control" type="Control" unique_id=2006575099]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sjyrp")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1577106016]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_efpx5")
+expand_mode = 1
+
+[node name="easyButton" type="TextureButton" parent="." unique_id=1458756003]
+layout_mode = 0
+offset_left = 426.0
+offset_top = 237.99997
+offset_right = 2598.0
+offset_bottom = 962.0
+rotation = 3.1415927
+scale = Vector2(-0.2, -0.2)
+texture_normal = ExtResource("2_bxvsn")
+
+[node name="mediumButton" type="TextureButton" parent="." unique_id=1940875866]
+layout_mode = 0
+offset_left = 426.00003
+offset_top = 338.0
+offset_right = 2598.0
+offset_bottom = 1062.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("3_0i50u")
+
+[node name="difficultButton" type="TextureButton" parent="." unique_id=775317180]
+layout_mode = 0
+offset_left = 428.0
+offset_top = 437.0
+offset_right = 2600.0
+offset_bottom = 1161.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("4_dpmtu")
+
+[node name="backButton" type="TextureButton" parent="." unique_id=827006992]
+layout_mode = 0
+offset_left = 230.0
+offset_top = 522.0
+offset_right = 2303.0
+offset_bottom = 1281.0
+scale = Vector2(0.07, 0.07)
+texture_normal = ExtResource("5_dpmtu")
+texture_hover = ExtResource("7_4na3v")
+
+[connection signal="pressed" from="easyButton" to="." method="_on_easy_button_pressed"]
+[connection signal="pressed" from="mediumButton" to="." method="_on_medium_button_pressed"]
+[connection signal="pressed" from="difficultButton" to="." method="_on_difficult_button_pressed"]
+[connection signal="pressed" from="backButton" to="." method="_on_back_button_pressed"]

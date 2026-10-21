@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://b5h8k4nbvsmi2"]
+
+[ext_resource type="AudioStream" uid="uid://dnri0h67mheeu" path="res://Assets The Ripper/Audio/Paint It Black.mp3" id="1_f8x3a"]
+[ext_resource type="Script" uid="uid://boyhgrji0y51k" path="res://BGM.gd" id="2_q8d6t"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" unique_id=783643729]
+stream = ExtResource("1_f8x3a")
+script = ExtResource("2_q8d6t")

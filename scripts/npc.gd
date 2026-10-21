@@ -1,14 +1,11 @@
 extends CharacterBody2D
 
-
 const UCS = preload("res://scripts/ucs.gd")
 const ASTAR = preload("res://scripts/astar.gd")
 const HEURISTIC = preload("res://scripts/heuristic.gd")
 
-
 const SPEED = 110.0
 const REPLAN_INTERVAL = 0.25
-
 
 enum PathfindingMode {
 	UCS,
@@ -16,13 +13,9 @@ enum PathfindingMode {
 	ASTAR_EUCLIDEAN
 }
 
-
 @export var pathfinding_mode: PathfindingMode = PathfindingMode.UCS
 
-
-# =========================================================
 # PATHFINDING OBJECT
-# =========================================================
 
 var grid
 var player
@@ -32,9 +25,7 @@ var astar
 var heuristic
 
 
-# =========================================================
 # CURRENT PATH
-# =========================================================
 
 var current_path: Array[Vector2i] = []
 
@@ -43,27 +34,21 @@ var expanded_nodes: Array[Vector2i] = []
 var path_index: int = 0
 
 
-# =========================================================
 # REPLANNING
-# =========================================================
 
 var replan_timer: float = 0.0
 
 var last_player_cell: Vector2i = Vector2i(-999, -999)
 
 
-# =========================================================
 # STATUS
-# =========================================================
 
 var path_status: String = "INITIALIZING"
 
 
-# =========================================================
 # CUMULATIVE STATISTICS
 #
 # INI TIDAK DI-RESET SETIAP REPLAN
-# =========================================================
 
 # Total semua node yang diexpand dari awal
 # NPC mulai mengejar sampai sekarang.
@@ -84,11 +69,9 @@ var total_path_cost: float = 0.0
 var total_replans: int = 0
 
 
-# =========================================================
 # STATISTIK SEARCH TERAKHIR
 #
 # Ini hanya untuk informasi tambahan.
-# =========================================================
 
 var last_search_cost: float = INF
 
@@ -101,9 +84,7 @@ var last_start_cell: Vector2i = Vector2i(-1, -1)
 var last_goal_cell: Vector2i = Vector2i(-1, -1)
 
 
-# =========================================================
 # READY
-# =========================================================
 
 func _ready():
 
@@ -140,9 +121,7 @@ func _ready():
 	update_path()
 
 
-# =========================================================
 # PHYSICS
-# =========================================================
 
 func _physics_process(delta):
 
@@ -192,9 +171,7 @@ func _physics_process(delta):
 	follow_path()
 
 
-# =========================================================
 # UPDATE PATH
-# =========================================================
 
 func update_path():
 
@@ -494,9 +471,7 @@ func update_path():
 	print("================================")
 
 
-# =========================================================
 # FOLLOW PATH
-# =========================================================
 
 func follow_path():
 
@@ -618,9 +593,7 @@ func follow_path():
 			replan_timer = 0.0
 
 
-# =========================================================
 # CARI CELL WALKABLE TERDEKAT
-# =========================================================
 
 func find_nearest_walkable(
 	start: Vector2i
@@ -667,9 +640,7 @@ func find_nearest_walkable(
 	return Vector2i(-999, -999)
 
 
-# =========================================================
 # NAMA ALGORITMA
-# =========================================================
 
 func get_mode_name() -> String:
 

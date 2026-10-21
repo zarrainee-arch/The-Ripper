@@ -1,0 +1,390 @@
+[gd_scene format=3 uid="uid://b3bem74rjjvt6"]
+
+[ext_resource type="Texture2D" uid="uid://dokvwoviymifa" path="res://Assets The Ripper/Optimization_Result/Background.png" id="1_ejids"]
+[ext_resource type="Script" uid="uid://q4elt0usukcu" path="res://scripts/result.gd" id="1_y4w2m"]
+[ext_resource type="Texture2D" uid="uid://dbspkw4fejll7" path="res://Assets The Ripper/Optimization_Result/statistikHasil_panel.png" id="3_wierg"]
+[ext_resource type="Texture2D" uid="uid://p6kesgw7as8" path="res://Assets The Ripper/Optimization_Result/kembali_normal.png" id="6_kjqr0"]
+[ext_resource type="Texture2D" uid="uid://bbjvagcq15prx" path="res://Assets The Ripper/Optimization_Result/config_awal.png" id="6_vnrpp"]
+[ext_resource type="Texture2D" uid="uid://cgt2w6pouy1or" path="res://Assets The Ripper/Optimization_Result/mulai_battle.png" id="6_y4w2m"]
+[ext_resource type="Texture2D" uid="uid://s6pbcpf3lt2d" path="res://Assets The Ripper/Optimization_Result/kembali_hover.png" id="7_6ouy7"]
+[ext_resource type="Texture2D" uid="uid://bqdynyrakmtp" path="res://Assets The Ripper/Optimization_Result/best_config.png" id="7_kjqr0"]
+[ext_resource type="Texture2D" uid="uid://ddybicujhrj2c" path="res://Assets The Ripper/Optimization_Result/mulai_hover.png" id="7_vnrpp"]
+[ext_resource type="Texture2D" uid="uid://ubw3au4oqn16" path="res://Assets The Ripper/Optimization_Result/statistik_button.png" id="8_6ouy7"]
+[ext_resource type="Texture2D" uid="uid://ccxaf101yamys" path="res://Assets The Ripper/Optimization_Result/statistic_hover.png" id="9_wierg"]
+[ext_resource type="Texture2D" uid="uid://coqwmylrx3772" path="res://Assets The Ripper/Optimization_Result/restart_normal.png" id="12_kjqr0"]
+[ext_resource type="Texture2D" uid="uid://drax30sdnid3b" path="res://Assets The Ripper/Optimization_Result/restart_hover.png" id="13_6ouy7"]
+
+[node name="Control" type="Control" unique_id=2023378177]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y4w2m")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1002899038]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ejids")
+expand_mode = 1
+
+[node name="PageStatistic" type="Control" parent="Background" unique_id=1360775505]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HasilStatistik" type="TextureRect" parent="Background/PageStatistic" unique_id=1971358440]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 88.0
+offset_right = 2429.0
+offset_bottom = 950.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_wierg")
+
+[node name="mulaiBattle" type="TextureButton" parent="Background/PageStatistic" unique_id=1185512689]
+layout_mode = 0
+offset_left = 774.0
+offset_top = 499.0
+offset_right = 1861.0
+offset_bottom = 689.0
+scale = Vector2(0.4, 0.4)
+texture_normal = ExtResource("6_y4w2m")
+texture_hover = ExtResource("7_vnrpp")
+
+[node name="BackMenu" type="TextureButton" parent="Background/PageStatistic" unique_id=909726316]
+layout_mode = 0
+offset_left = 72.99999
+offset_top = 509.99997
+offset_right = 2068.0
+offset_bottom = 796.0
+scale = Vector2(0.22, 0.22)
+texture_normal = ExtResource("6_kjqr0")
+texture_hover = ExtResource("7_6ouy7")
+
+[node name="restartButton" type="TextureButton" parent="Background/PageStatistic" unique_id=593330826]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 579.0
+offset_right = 2375.0
+offset_bottom = 847.0
+scale = Vector2(0.22, 0.22)
+texture_normal = ExtResource("12_kjqr0")
+texture_hover = ExtResource("13_6ouy7")
+
+[node name="BestVitnessValue" type="Label" parent="Background/PageStatistic" unique_id=741814080]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 244.0
+offset_right = 322.0
+offset_bottom = 284.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="DifficultyScoreValue" type="Label" parent="Background/PageStatistic" unique_id=1680332350]
+layout_mode = 0
+offset_left = 401.0
+offset_top = 242.0
+offset_right = 608.0
+offset_bottom = 284.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="TargetDifficultyValue" type="Label" parent="Background/PageStatistic" unique_id=1768617862]
+layout_mode = 0
+offset_left = 679.0
+offset_top = 241.0
+offset_right = 887.0
+offset_bottom = 283.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="AbsoluteErrorValue" type="Label" parent="Background/PageStatistic" unique_id=1584742114]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 242.0
+offset_right = 1169.0
+offset_bottom = 284.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="AlgorithmNameValue" type="Label" parent="Background/PageStatistic" unique_id=271802679]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 327.0
+offset_right = 284.0
+offset_bottom = 369.0
+theme_override_font_sizes/font_size = 16
+text = "AlgoritmaName"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="IterationCountValue" type="Label" parent="Background/PageStatistic" unique_id=1840494184]
+layout_mode = 0
+offset_left = 567.0
+offset_top = 324.0
+offset_right = 722.0
+offset_bottom = 366.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="SeedValue" type="Label" parent="Background/PageStatistic" unique_id=872611886]
+layout_mode = 0
+offset_left = 343.0
+offset_top = 328.0
+offset_right = 496.0
+offset_bottom = 370.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="EvaluationCountValue" type="Label" parent="Background/PageStatistic" unique_id=1228485233]
+layout_mode = 0
+offset_left = 786.0
+offset_top = 326.0
+offset_right = 947.0
+offset_bottom = 368.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="RestartCountValue" type="Label" parent="Background/PageStatistic" unique_id=1266802884]
+layout_mode = 0
+offset_left = 1014.0
+offset_top = 324.0
+offset_right = 1170.0
+offset_bottom = 366.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="ElapsedTimeValue" type="Label" parent="Background/PageStatistic" unique_id=1667771361]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 413.0
+offset_right = 402.0
+offset_bottom = 455.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="StatusValue" type="Label" parent="Background/PageStatistic" unique_id=1035514383]
+layout_mode = 0
+offset_left = 531.0
+offset_top = 410.0
+offset_right = 775.0
+offset_bottom = 452.0
+theme_override_font_sizes/font_size = 16
+text = "Berhasil or Tidak Berhasil"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="TerminationReasonValue" type="Label" parent="Background/PageStatistic" unique_id=1685520635]
+layout_mode = 0
+offset_left = 928.0
+offset_top = 409.0
+offset_right = 1172.0
+offset_bottom = 451.0
+theme_override_font_sizes/font_size = 16
+text = "goal_reached"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="PageConfiguration" type="Control" parent="Background" unique_id=1644279762]
+visible = false
+anchors_preset = 0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 42.0
+
+[node name="ConfigurationAwal" type="TextureRect" parent="Background/PageConfiguration" unique_id=502191189]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 149.0
+offset_right = 1256.0
+offset_bottom = 877.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_vnrpp")
+
+[node name="BestConfiguration" type="TextureRect" parent="Background/PageConfiguration" unique_id=206922978]
+layout_mode = 0
+offset_left = 635.0
+offset_top = 138.0
+offset_right = 1840.0
+offset_bottom = 894.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_kjqr0")
+
+[node name="StatisticButton" type="TextureButton" parent="Background/PageConfiguration" unique_id=1957411911]
+layout_mode = 0
+offset_left = 399.00003
+offset_top = 534.00006
+offset_right = 1479.0
+offset_bottom = 734.00006
+scale = Vector2(0.45, 0.45)
+texture_normal = ExtResource("8_6ouy7")
+texture_hover = ExtResource("9_wierg")
+
+[node name="streetAwal" type="Label" parent="Background/PageConfiguration" unique_id=1101289156]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 447.0
+offset_right = 148.0
+offset_bottom = 475.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="knifeAwal" type="Label" parent="Background/PageConfiguration" unique_id=626809902]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 448.0
+offset_right = 262.0
+offset_bottom = 476.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="heavyAwal" type="Label" parent="Background/PageConfiguration" unique_id=1726442332]
+layout_mode = 0
+offset_left = 347.0
+offset_top = 447.0
+offset_right = 381.0
+offset_bottom = 475.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="weaponAwal" type="Label" parent="Background/PageConfiguration" unique_id=1847404261]
+layout_mode = 0
+offset_left = 441.0
+offset_top = 347.0
+offset_right = 499.0
+offset_bottom = 394.0
+theme_override_font_sizes/font_size = 15
+text = "weapon
+Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="armorAwal" type="Label" parent="Background/PageConfiguration" unique_id=466711025]
+layout_mode = 0
+offset_left = 544.0
+offset_top = 347.0
+offset_right = 602.0
+offset_bottom = 394.0
+theme_override_font_sizes/font_size = 15
+text = "armor
+Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="bestStreet" type="Label" parent="Background/PageConfiguration" unique_id=1669197616]
+layout_mode = 0
+offset_left = 702.0
+offset_top = 449.0
+offset_right = 736.0
+offset_bottom = 477.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="bestKnife" type="Label" parent="Background/PageConfiguration" unique_id=18549598]
+layout_mode = 0
+offset_left = 819.0
+offset_top = 450.0
+offset_right = 853.0
+offset_bottom = 478.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="bestHeavy" type="Label" parent="Background/PageConfiguration" unique_id=514613393]
+layout_mode = 0
+offset_left = 932.0
+offset_top = 450.0
+offset_right = 966.0
+offset_bottom = 478.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+
+[node name="bestWeapon" type="Label" parent="Background/PageConfiguration" unique_id=1310893396]
+layout_mode = 0
+offset_left = 1029.0
+offset_top = 346.0
+offset_right = 1087.0
+offset_bottom = 393.0
+theme_override_font_sizes/font_size = 15
+text = "weapon
+Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="bestArmor" type="Label" parent="Background/PageConfiguration" unique_id=2071318570]
+layout_mode = 0
+offset_left = 1134.0
+offset_top = 345.0
+offset_right = 1192.0
+offset_bottom = 392.0
+theme_override_font_sizes/font_size = 15
+text = "armor
+Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[connection signal="pressed" from="Background/PageStatistic/mulaiBattle" to="." method="_on_mulai_battle_pressed"]
+[connection signal="pressed" from="Background/PageStatistic/BackMenu" to="." method="_on_back_menu_pressed"]
+[connection signal="pressed" from="Background/PageStatistic/restartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="Background/PageConfiguration/StatisticButton" to="." method="_on_statistic_button_pressed"]

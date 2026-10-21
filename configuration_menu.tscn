@@ -1,0 +1,486 @@
+[gd_scene format=3 uid="uid://cuv1n142s70ki"]
+
+[ext_resource type="Script" uid="uid://cx68hi8dv222a" path="res://configuration_menu.gd" id="1_7rktx"]
+[ext_resource type="Texture2D" uid="uid://bnfutlwuklam2" path="res://Assets The Ripper/configuration_menu/base_menu.png" id="1_sps0e"]
+[ext_resource type="Texture2D" uid="uid://b87svqdfcvgnd" path="res://Assets The Ripper/configuration_menu/npcComposition_normal.png" id="2_er5qw"]
+[ext_resource type="Texture2D" uid="uid://f1hdkj2bwqdv" path="res://Assets The Ripper/configuration_menu/npcComposition_hover.png" id="3_52cvh"]
+[ext_resource type="Texture2D" uid="uid://fbaa4ynq6dv1" path="res://Assets The Ripper/configuration_menu/weapon_normal.png" id="4_c7c0y"]
+[ext_resource type="Texture2D" uid="uid://cib3ljd4jklmw" path="res://Assets The Ripper/configuration_menu/weapon_hover.png" id="5_uunuf"]
+[ext_resource type="Texture2D" uid="uid://cpx3s017et1wt" path="res://Assets The Ripper/configuration_menu/armor_normal.png" id="6_sd505"]
+[ext_resource type="Texture2D" uid="uid://bxtfdce7bwkmm" path="res://Assets The Ripper/configuration_menu/armor_hover.png" id="7_fiqyg"]
+[ext_resource type="Texture2D" uid="uid://oebi1udi2ljh" path="res://Assets The Ripper/selectMenu/backButton.png" id="9_uf31g"]
+[ext_resource type="Texture2D" uid="uid://b3vaqc606rmhm" path="res://Assets The Ripper/selectMenu/hoverBack.png" id="10_6oakr"]
+[ext_resource type="Texture2D" uid="uid://s28qfoc6op03" path="res://Assets The Ripper/configuration_menu/optimization_normal.png" id="10_smk2a"]
+[ext_resource type="Texture2D" uid="uid://cnikvudcx7q0f" path="res://Assets The Ripper/configuration_menu/optimization_hover.png" id="11_xq1se"]
+[ext_resource type="Texture2D" uid="uid://dfvvoamdplku2" path="res://Assets The Ripper/configuration_menu/seed_normal.png" id="12_xq1se"]
+[ext_resource type="Texture2D" uid="uid://chn21gn1vvmi" path="res://Assets The Ripper/configuration_menu/seed_hover.png" id="13_7rktx"]
+[ext_resource type="Texture2D" uid="uid://lt0y2d7o3vfy" path="res://Assets The Ripper/configuration_menu/npc_judul.png" id="15_h70gn"]
+[ext_resource type="Texture2D" uid="uid://bki5qb5ynfwq2" path="res://Assets The Ripper/configuration_menu/weapon_judul.png" id="16_gub0j"]
+[ext_resource type="Texture2D" uid="uid://dddvjbuajrwfh" path="res://Assets The Ripper/configuration_menu/npc_card.png" id="16_rclux"]
+[ext_resource type="Texture2D" uid="uid://dbcv5og17yu4l" path="res://Assets The Ripper/configuration_menu/knife_normal.png" id="17_f6qj6"]
+[ext_resource type="Texture2D" uid="uid://b372ro64eiwnk" path="res://Assets The Ripper/configuration_menu/armor_judul.png" id="17_yqs0v"]
+[ext_resource type="Texture2D" uid="uid://3wjwhouqkap1" path="res://Assets The Ripper/configuration_menu/knife_hover.png" id="18_c6a8d"]
+[ext_resource type="Texture2D" uid="uid://70i6pcfovtob" path="res://Assets The Ripper/configuration_menu/optimization_judul.png" id="18_vc4sb"]
+[ext_resource type="Texture2D" uid="uid://xx53fka0pj73" path="res://Assets The Ripper/configuration_menu/seed_judul.png" id="19_hm3uw"]
+[ext_resource type="Texture2D" uid="uid://n2prub05frmx" path="res://Assets The Ripper/configuration_menu/club_normal.png" id="19_r1iun"]
+[ext_resource type="Texture2D" uid="uid://co1h8egnrnp05" path="res://Assets The Ripper/configuration_menu/club_hover.png" id="20_rth3d"]
+[ext_resource type="Texture2D" uid="uid://vrm41cfjihwp" path="res://Assets The Ripper/configuration_menu/cleaver_normal.png" id="21_q8qsv"]
+[ext_resource type="Texture2D" uid="uid://ce535uvio4xfs" path="res://Assets The Ripper/configuration_menu/cleaver_hover.png" id="22_2pl24"]
+[ext_resource type="Texture2D" uid="uid://ctr1c1su6gtnb" path="res://Assets The Ripper/configuration_menu/street_normal.png" id="24_rm00h"]
+[ext_resource type="Texture2D" uid="uid://burkqhs055qeq" path="res://Assets The Ripper/configuration_menu/street_hover.png" id="25_nayap"]
+[ext_resource type="Texture2D" uid="uid://sx34sf2r8dvq" path="res://Assets The Ripper/configuration_menu/leather_normal.png" id="26_llght"]
+[ext_resource type="Texture2D" uid="uid://bsg5makhqtkbp" path="res://Assets The Ripper/configuration_menu/leather_hover.png" id="27_qexge"]
+[ext_resource type="Texture2D" uid="uid://crrcfg1jqtp3" path="res://Assets The Ripper/configuration_menu/reinforced_normal.png" id="28_jd38l"]
+[ext_resource type="Texture2D" uid="uid://mkq4712unel5" path="res://Assets The Ripper/configuration_menu/reinforced_hover.png" id="29_kkmsb"]
+[ext_resource type="Texture2D" uid="uid://sofdvg08hdq7" path="res://Assets The Ripper/configuration_menu/hill_normal.png" id="31_rf73d"]
+[ext_resource type="Texture2D" uid="uid://dyeksgrfj4owg" path="res://Assets The Ripper/configuration_menu/hill_hover.png" id="32_rclux"]
+[ext_resource type="Texture2D" uid="uid://dhf6arbd2pj01" path="res://Assets The Ripper/configuration_menu/restart_normal.png" id="33_48rx0"]
+[ext_resource type="Texture2D" uid="uid://ctklhaqd4qooc" path="res://Assets The Ripper/configuration_menu/restart_hover.png" id="34_psguu"]
+[ext_resource type="Texture2D" uid="uid://dctsviwq0hjnw" path="res://Assets The Ripper/configuration_menu/annealing_normal.png" id="35_fycs6"]
+[ext_resource type="Texture2D" uid="uid://v4ef6umoe170" path="res://Assets The Ripper/configuration_menu/annealing_hover.png" id="36_curdg"]
+[ext_resource type="Texture2D" uid="uid://uclokhfxmlh5" path="res://Assets The Ripper/configuration_menu/texture_normal.png" id="38_psguu"]
+[ext_resource type="Texture2D" uid="uid://83si4s80kh8g" path="res://Assets The Ripper/configuration_menu/texture_hover.png" id="39_fycs6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_84bvq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gdgnw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i4brl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_428ds"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tjk4y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_28mon"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_res2k"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5xsgv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2lkha"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_npnq2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psguu"]
+bg_color = Color(0.39215687, 0.078431375, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fycs6"]
+
+[node name="configuration_menu" type="Control" unique_id=842785200]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_7rktx")
+
+[node name="menubase" type="TextureRect" parent="." unique_id=356135866]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1240.0
+offset_bottom = 680.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_sps0e")
+expand_mode = 1
+
+[node name="npcButton" type="TextureButton" parent="." unique_id=8360480]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 128.0
+offset_right = 1120.0
+offset_bottom = 350.0
+scale = Vector2(0.26, 0.26)
+texture_normal = ExtResource("2_er5qw")
+texture_hover = ExtResource("3_52cvh")
+
+[node name="weaponButton" type="TextureButton" parent="." unique_id=1473522462]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 222.0
+offset_right = 1263.0
+offset_bottom = 469.0
+scale = Vector2(0.23, 0.23)
+texture_normal = ExtResource("4_c7c0y")
+texture_hover = ExtResource("5_uunuf")
+
+[node name="armorButton" type="TextureButton" parent="." unique_id=553136517]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 328.0
+offset_right = 1342.0
+offset_bottom = 561.0
+scale = Vector2(0.22, 0.22)
+texture_normal = ExtResource("6_sd505")
+texture_hover = ExtResource("7_fiqyg")
+
+[node name="backButton" type="TextureButton" parent="." unique_id=843114109]
+layout_mode = 0
+offset_left = 87.0
+offset_top = 617.0
+offset_right = 2160.0
+offset_bottom = 1376.0
+scale = Vector2(0.07, 0.07)
+texture_normal = ExtResource("9_uf31g")
+texture_hover = ExtResource("10_6oakr")
+
+[node name="optimizationButton" type="TextureButton" parent="." unique_id=1402624082]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 525.0
+offset_right = 1337.0
+offset_bottom = 754.0
+scale = Vector2(0.22, 0.22)
+texture_normal = ExtResource("10_smk2a")
+texture_hover = ExtResource("11_xq1se")
+
+[node name="seedButton" type="TextureButton" parent="." unique_id=1297283722]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 430.0
+offset_right = 1347.0
+offset_bottom = 649.0
+scale = Vector2(0.22, 0.22)
+texture_normal = ExtResource("12_xq1se")
+texture_hover = ExtResource("13_7rktx")
+
+[node name="ContentPanel" type="PanelContainer" parent="." unique_id=1796976062]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Pages" type="Control" parent="ContentPanel" unique_id=537428335]
+layout_mode = 2
+
+[node name="NPCCountPanel" type="Control" parent="ContentPanel/Pages" unique_id=1948355616]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NPCJudul" type="TextureRect" parent="ContentPanel/Pages/NPCCountPanel" unique_id=39591169]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 115.0
+offset_right = 1184.0
+offset_bottom = 212.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("15_h70gn")
+
+[node name="npcCard" type="TextureRect" parent="ContentPanel/Pages/NPCCountPanel" unique_id=553772127]
+layout_mode = 0
+offset_left = 236.0
+offset_top = 151.0
+offset_right = 2408.0
+offset_bottom = 875.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("16_rclux")
+
+[node name="StreetMinus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=842329773]
+layout_mode = 0
+offset_left = 878.0
+offset_top = 191.0
+offset_right = 919.0
+offset_bottom = 274.0
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxEmpty_84bvq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_gdgnw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_i4brl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_428ds")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tjk4y")
+text = "-"
+
+[node name="KnifeMinus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=1195115992]
+layout_mode = 0
+offset_left = 879.0
+offset_top = 300.0
+offset_right = 920.0
+offset_bottom = 383.0
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxEmpty_84bvq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_gdgnw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_i4brl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_428ds")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tjk4y")
+text = "-"
+
+[node name="HeavyMinus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=1849944995]
+layout_mode = 0
+offset_left = 878.0
+offset_top = 407.0
+offset_right = 919.0
+offset_bottom = 490.0
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxEmpty_84bvq")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_gdgnw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_i4brl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_428ds")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tjk4y")
+text = "-"
+
+[node name="StreetPlus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=821913844]
+layout_mode = 0
+offset_left = 1052.0
+offset_top = 210.0
+offset_right = 1100.0
+offset_bottom = 265.0
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxEmpty_28mon")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_res2k")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5xsgv")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_2lkha")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_npnq2")
+text = "+"
+
+[node name="KnifePlus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=1048101361]
+layout_mode = 0
+offset_left = 1051.0
+offset_top = 318.0
+offset_right = 1099.0
+offset_bottom = 373.0
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxEmpty_28mon")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_res2k")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5xsgv")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_2lkha")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_npnq2")
+text = "+"
+
+[node name="HeavyPlus" type="Button" parent="ContentPanel/Pages/NPCCountPanel" unique_id=2130447613]
+layout_mode = 0
+offset_left = 1055.0
+offset_top = 428.0
+offset_right = 1103.0
+offset_bottom = 483.0
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxEmpty_28mon")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_res2k")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5xsgv")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_2lkha")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_npnq2")
+text = "+"
+
+[node name="StreetAngka" type="Label" parent="ContentPanel/Pages/NPCCountPanel" unique_id=1770652151]
+layout_mode = 0
+offset_left = 972.0
+offset_top = 215.0
+offset_right = 1002.0
+offset_bottom = 257.0
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 1
+
+[node name="KnifeAngka" type="Label" parent="ContentPanel/Pages/NPCCountPanel" unique_id=1428486806]
+layout_mode = 0
+offset_left = 975.0
+offset_top = 324.0
+offset_right = 1005.0
+offset_bottom = 366.0
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 1
+
+[node name="HeavyAngka" type="Label" parent="ContentPanel/Pages/NPCCountPanel" unique_id=746709983]
+layout_mode = 0
+offset_left = 975.0
+offset_top = 434.0
+offset_right = 1005.0
+offset_bottom = 476.0
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 1
+
+[node name="WeaponPanel" type="Control" parent="ContentPanel/Pages" unique_id=1012374019]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="WeaponJudul" type="TextureRect" parent="ContentPanel/Pages/WeaponPanel" unique_id=1914612028]
+layout_mode = 0
+offset_left = 686.0
+offset_top = 95.0
+offset_right = 1010.0
+offset_bottom = 247.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("16_gub0j")
+
+[node name="Knife" type="TextureButton" parent="ContentPanel/Pages/WeaponPanel" unique_id=1795130269]
+layout_mode = 0
+offset_left = 419.0
+offset_top = 275.0
+offset_right = 768.0
+offset_bottom = 751.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("17_f6qj6")
+texture_hover = ExtResource("18_c6a8d")
+
+[node name="Club" type="TextureButton" parent="ContentPanel/Pages/WeaponPanel" unique_id=407921086]
+layout_mode = 0
+offset_left = 683.0
+offset_top = 269.0
+offset_right = 1051.0
+offset_bottom = 754.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("19_r1iun")
+texture_hover = ExtResource("20_rth3d")
+
+[node name="Clever" type="TextureButton" parent="ContentPanel/Pages/WeaponPanel" unique_id=123263212]
+layout_mode = 0
+offset_left = 967.0
+offset_top = 269.0
+offset_right = 1323.0
+offset_bottom = 770.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("21_q8qsv")
+texture_hover = ExtResource("22_2pl24")
+
+[node name="ArmorPanel" type="Control" parent="ContentPanel/Pages" unique_id=341461890]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ArmorJudul" type="TextureRect" parent="ContentPanel/Pages/ArmorPanel" unique_id=1474429219]
+layout_mode = 0
+offset_left = 715.0
+offset_top = 111.0
+offset_right = 979.0
+offset_bottom = 233.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("17_yqs0v")
+
+[node name="Street" type="TextureButton" parent="ContentPanel/Pages/ArmorPanel" unique_id=1230029065]
+layout_mode = 0
+offset_left = 416.00003
+offset_top = 274.0
+offset_right = 764.0
+offset_bottom = 756.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("24_rm00h")
+texture_hover = ExtResource("25_nayap")
+
+[node name="Leather" type="TextureButton" parent="ContentPanel/Pages/ArmorPanel" unique_id=290394565]
+layout_mode = 0
+offset_left = 692.0
+offset_top = 278.0
+offset_right = 1041.0
+offset_bottom = 754.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("26_llght")
+texture_hover = ExtResource("27_qexge")
+
+[node name="Reinforced" type="TextureButton" parent="ContentPanel/Pages/ArmorPanel" unique_id=2040633532]
+layout_mode = 0
+offset_left = 968.0
+offset_top = 278.0
+offset_right = 1326.0
+offset_bottom = 759.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("28_jd38l")
+texture_hover = ExtResource("29_kkmsb")
+
+[node name="SeedPanel" type="Control" parent="ContentPanel/Pages" unique_id=537744060]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SeedJudul" type="TextureRect" parent="ContentPanel/Pages/SeedPanel" unique_id=1395173928]
+layout_mode = 0
+offset_left = 705.0
+offset_top = 102.0
+offset_right = 917.0
+offset_bottom = 230.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("19_hm3uw")
+
+[node name="LineEdit" type="LineEdit" parent="ContentPanel/Pages/SeedPanel" unique_id=771550253]
+layout_mode = 0
+offset_left = 462.0
+offset_top = 206.0
+offset_right = 1090.0
+offset_bottom = 264.0
+theme_override_colors/font_color = Color(0.8976862, 0.8675935, 0.8581404, 1)
+theme_override_colors/font_placeholder_color = Color(0.9254902, 0.8627451, 0.83137256, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_psguu")
+theme_override_styles/read_only = SubResource("StyleBoxFlat_fycs6")
+placeholder_text = "     Masukkan seed (opsional)..."
+
+[node name="AlgorithmPanel" type="Control" parent="ContentPanel/Pages" unique_id=900077219]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OptimizationJudul" type="TextureRect" parent="ContentPanel/Pages/AlgorithmPanel" unique_id=2011381759]
+layout_mode = 0
+offset_left = 575.0
+offset_top = 106.0
+offset_right = 1261.0
+offset_bottom = 226.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("18_vc4sb")
+
+[node name="HillClimbing" type="TextureButton" parent="ContentPanel/Pages/AlgorithmPanel" unique_id=850017167]
+layout_mode = 0
+offset_left = 363.0
+offset_top = 283.0
+offset_right = 849.0
+offset_bottom = 641.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("31_rf73d")
+texture_hover = ExtResource("32_rclux")
+
+[node name="RandomRestart" type="TextureButton" parent="ContentPanel/Pages/AlgorithmPanel" unique_id=1766061118]
+layout_mode = 0
+offset_left = 657.0
+offset_top = 283.0
+offset_right = 1129.0
+offset_bottom = 644.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("33_48rx0")
+texture_hover = ExtResource("34_psguu")
+
+[node name="SimulatedAnnealing" type="TextureButton" parent="ContentPanel/Pages/AlgorithmPanel" unique_id=1274837525]
+layout_mode = 0
+offset_left = 937.00006
+offset_top = 281.0
+offset_right = 1435.0
+offset_bottom = 640.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("35_fycs6")
+texture_hover = ExtResource("36_curdg")
+
+[node name="optimasiButton" type="TextureButton" parent="ContentPanel/Pages/AlgorithmPanel" unique_id=289288727]
+layout_mode = 0
+offset_left = 620.99994
+offset_top = 557.99994
+offset_right = 2268.0
+offset_bottom = 912.99994
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("38_psguu")
+texture_hover = ExtResource("39_fycs6")
+
+[connection signal="pressed" from="npcButton" to="." method="_on_npc_button_pressed"]
+[connection signal="pressed" from="weaponButton" to="." method="_on_weapon_button_pressed"]
+[connection signal="pressed" from="armorButton" to="." method="_on_armor_button_pressed"]
+[connection signal="pressed" from="backButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="optimizationButton" to="." method="_on_optimization_button_pressed"]
+[connection signal="pressed" from="seedButton" to="." method="_on_seed_button_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/StreetMinus" to="." method="_on_street_minus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/KnifeMinus" to="." method="_on_knife_minus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/HeavyMinus" to="." method="_on_heavy_minus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/StreetPlus" to="." method="_on_street_plus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/KnifePlus" to="." method="_on_knife_plus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/NPCCountPanel/HeavyPlus" to="." method="_on_heavy_plus_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/WeaponPanel/Knife" to="." method="_on_knife_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/WeaponPanel/Club" to="." method="_on_club_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/WeaponPanel/Clever" to="." method="_on_clever_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Street" to="." method="_on_street_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Leather" to="." method="_on_leather_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Reinforced" to="." method="_on_reinforced_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/HillClimbing" to="." method="_on_hill_climbing_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/RandomRestart" to="." method="_on_random_restart_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/SimulatedAnnealing" to="." method="_on_simulated_annealing_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/optimasiButton" to="." method="_on_optimasi_button_pressed"]

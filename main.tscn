@@ -15,6 +15,8 @@
 [ext_resource type="Script" uid="uid://crltqrq5xtgu4" path="res://scripts/battle_ui.gd" id="9_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bsthml0kfu4eq" path="res://Assets The Ripper/newattack.png" id="10_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://cr6otthskdth7" path="res://Assets The Ripper/The Ripper.png" id="10_efxa6"]
+[ext_resource type="Texture2D" uid="uid://dt6olt8n4pusm" path="res://Assets The Ripper/battle/Knife_walk.png" id="11_82xsv"]
+[ext_resource type="Texture2D" uid="uid://df00ct6gcmt6r" path="res://Assets The Ripper/battle/Heavy_idle.png" id="11_getpj"]
 [ext_resource type="Script" uid="uid://c16hpltv3wdxj" path="res://scripts/battle/battle_system.gd" id="13_w48qg"]
 [ext_resource type="AudioStream" uid="uid://bmefmx8dpp0xq" path="res://Assets The Ripper/Audio/ncone-mysterious-melody-loop-197040.mp3" id="17_yaehf"]
 [ext_resource type="AudioStream" uid="uid://dksd247flp2gv" path="res://Assets The Ripper/Audio/gargamel10-sword-slashing-game-sound-effect-1-379228.mp3" id="18_074og"]
@@ -241,6 +243,7 @@ scale = Vector2(1.083, 1.083)
 script = ExtResource("2_0xm2m")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=363023756]
+position = Vector2(-11.080334, -26.777473)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("6_7mycd")
 hframes = 8
@@ -270,6 +273,7 @@ script = ExtResource("3_h2yge")
 pathfinding_mode = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="NPC" unique_id=1045065238]
+position = Vector2(19.390583, -51.70822)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("7_5vw27")
 hframes = 8
@@ -279,10 +283,57 @@ visible = false
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_gdgnw")
 animation = &"Attack"
-frame = 3
-frame_progress = 0.17591438
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NPC" unique_id=433132044]
+scale = Vector2(1.1, 1.1)
+shape = SubResource("CircleShape2D_gdgnw")
+disabled = true
+
+[node name="Heavy" type="CharacterBody2D" parent="." unique_id=617194598]
+position = Vector2(1400, 500)
+scale = Vector2(1.083, 1.083)
+script = ExtResource("3_h2yge")
+pathfinding_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Heavy" unique_id=23504600]
+position = Vector2(11.080333, -108.95661)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("11_getpj")
+hframes = 8
+region_enabled = true
+region_rect = Rect2(0, 0, 1774, 256.125)
+
+[node name="BattleNPC" type="AnimatedSprite2D" parent="Heavy" unique_id=2122974852]
+visible = false
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_gdgnw")
+animation = &"Attack"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Heavy" unique_id=375175246]
+scale = Vector2(1.1, 1.1)
+shape = SubResource("CircleShape2D_gdgnw")
+disabled = true
+
+[node name="KnifeThug" type="CharacterBody2D" parent="." unique_id=516458469]
+position = Vector2(1400, 500)
+scale = Vector2(1.083, 1.083)
+script = ExtResource("3_h2yge")
+pathfinding_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="KnifeThug" unique_id=2126504677]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("11_82xsv")
+hframes = 8
+region_enabled = true
+region_rect = Rect2(38, 16.5, 1774, 212.625)
+
+[node name="BattleNPC" type="AnimatedSprite2D" parent="KnifeThug" unique_id=1503344493]
+visible = false
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_gdgnw")
+animation = &"Attack"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KnifeThug" unique_id=1036603465]
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CircleShape2D_gdgnw")
 disabled = true
@@ -294,7 +345,6 @@ script = ExtResource("9_kek77")
 script = ExtResource("9_ycdy4")
 
 [node name="BattlePanel" type="Panel" parent="BattleUI" unique_id=1557023578]
-visible = false
 offset_left = 230.0
 offset_top = 470.0
 offset_right = 1050.0
@@ -304,9 +354,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_gdgnw")
 [node name="PanelFrame" type="TextureRect" parent="BattleUI/BattlePanel" unique_id=960737882]
 layout_mode = 0
 offset_left = -65.0
-offset_top = -100.0
+offset_top = -73.0
 offset_right = 885.0
-offset_bottom = 320.0
+offset_bottom = 283.0
 texture = ExtResource("9_efxa6")
 expand_mode = 1
 
@@ -378,12 +428,14 @@ expand_mode = 1
 
 [node name="TurnLabel" type="Label" parent="BattleUI/BattlePanel" unique_id=9266374]
 layout_mode = 0
-offset_left = 340.0
+offset_left = 286.0
 offset_top = 65.0
-offset_right = 480.0
+offset_right = 531.0
 offset_bottom = 100.0
 text = "YOUR TURN"
 horizontal_alignment = 1
+autowrap_mode = 2
+clip_text = true
 
 [node name="ActionButtons" type="HBoxContainer" parent="BattleUI/BattlePanel" unique_id=973820187]
 layout_mode = 0

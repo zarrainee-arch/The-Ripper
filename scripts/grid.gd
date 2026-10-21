@@ -18,14 +18,13 @@ func is_inside_grid(cell: Vector2i) -> bool:
 	)
 
 
-func is_walkable(cell: Vector2i) -> bool:
 
+
+func is_walkable(cell: Vector2i) -> bool:
 	if not is_inside_grid(cell):
 		return false
 
 	var space_state = get_world_2d().direct_space_state
-
-	# Cek TITIK TENGAH cell.
 	var point = cell_to_world(cell)
 
 	var query = PhysicsPointQueryParameters2D.new()
@@ -37,14 +36,20 @@ func is_walkable(cell: Vector2i) -> bool:
 	var results = space_state.intersect_point(query)
 
 	for result in results:
-
 		var collider = result["collider"]
+
+		# Kenali obstacle dan turunannya.
+		if collider == get_parent().get_node_or_null("Obstacle"):
+			return false
 
 		if collider.name == "Obstacle":
 			return false
 
+		if collider.is_in_group("obstacles"):
+			return false
+			print("WALKABLE CELL: ", cell, " | RESULTS: ", results.size())
+		return true
 	return true
-
 
 func get_neighbors(cell: Vector2i) -> Array[Vector2i]:
 
