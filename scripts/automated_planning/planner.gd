@@ -163,7 +163,6 @@ static func find_plan(initial_state: Dictionary, planner_mode: String = MODE_UCS
     # Menghitung waktu proses dan mengembalikan hasil planning.
     return _finish_result(result, start_time)
 
-
 static func _get_best_frontier_position(frontier: Array, nodes: Array, planner_mode: String) -> int:
     # Menganggap elemen pertama frontier sebagai node terbaik sementara.
     var best_position := 0
@@ -179,7 +178,6 @@ static func _get_best_frontier_position(frontier: Array, nodes: Array, planner_m
             best_index = node_index
 
     return best_position
-
 
 static func _is_better(node: Dictionary, node_index: int, best_node: Dictionary, best_index: int, planner_mode: String) -> bool:
     # Menghitung prioritas node berdasarkan algoritma yang digunakan.
@@ -210,7 +208,6 @@ static func _is_better(node: Dictionary, node_index: int, best_node: Dictionary,
     # Jika seluruh kriteria sama, gunakan indeks node agar urutan pemilihan tetap konsisten.
     return node_index < best_index
 
-
 static func _get_node_npc_id(node: Dictionary) -> String:
     # Mengambil informasi aksi dari node yang sedang diperiksa.
     var action: Dictionary = node.get("action", {})
@@ -220,7 +217,6 @@ static func _get_node_npc_id(node: Dictionary) -> String:
         return ""
 
     return str(action.get("npc", ""))
-
 
 static func _calculate_priority(node: Dictionary, planner_mode: String) -> int:
     # g merupakan total biaya dari S0 sampai node saat ini.
@@ -233,7 +229,6 @@ static func _calculate_priority(node: Dictionary, planner_mode: String) -> int:
     # A* mempertimbangkan biaya jalur dan estimasi biaya menuju goal.
     # f(n) = g(n) + h(n).
     return g + DOMAIN.calculate_heuristic(node["state"])
-
 
 static func _reconstruct_plan(nodes: Array, goal_index: int) -> Dictionary:
     # Menampung aksi dalam urutan terbalik, dimulai dari node goal.
@@ -277,7 +272,6 @@ static func _reconstruct_plan(nodes: Array, goal_index: int) -> Dictionary:
         "steps": steps,
         "total_cost": total_cost
     }
-
 
 static func _finish_result(result: Dictionary, start_time: int) -> Dictionary:
     # Menghitung selisih waktu sejak planning dimulai.
