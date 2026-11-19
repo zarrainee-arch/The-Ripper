@@ -1,4 +1,4 @@
-﻿extends RefCounted
+extends RefCounted
 class_name HillClimbing
 
 const GOAL_REACHED := OptimizationResult.REASON_GOAL_REACHED

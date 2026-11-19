@@ -1,6 +1,5 @@
 extends StaticBody2D
 
-
 func _ready():
 	# Pastikan Obstacle benar-benar menjadi collider solid
 	collision_layer = 1

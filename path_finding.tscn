@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://bxsusvdamxhv4"]
+
+[ext_resource type="Texture2D" uid="uid://v6o2vtf6mwm3" path="res://Assets The Ripper/PathFinding_menu/menu_frame.png" id="1_g5lrc"]
+[ext_resource type="Script" uid="uid://c146evr0h7aow" path="res://path_finding.gd" id="1_pb7wt"]
+[ext_resource type="Texture2D" uid="uid://cbcpdcvhbxud0" path="res://Assets The Ripper/PathFinding_menu/ucs_button.png" id="2_yqsvm"]
+[ext_resource type="Texture2D" uid="uid://c8qiaussff1gt" path="res://Assets The Ripper/PathFinding_menu/ucs_hover.png" id="3_cuu4d"]
+[ext_resource type="Texture2D" uid="uid://b75loqqag4rgk" path="res://Assets The Ripper/PathFinding_menu/manhattan.png" id="3_lx474"]
+[ext_resource type="Texture2D" uid="uid://uf74v6fksxsn" path="res://Assets The Ripper/PathFinding_menu/ucs.png" id="4_6v7s6"]
+[ext_resource type="Texture2D" uid="uid://04g12xlbvfrn" path="res://Assets The Ripper/PathFinding_menu/euclidean.png" id="4_p630v"]
+[ext_resource type="Texture2D" uid="uid://cioaa5eqytemi" path="res://Assets The Ripper/PathFinding_menu/manhattan_button.png" id="4_trtwh"]
+[ext_resource type="Texture2D" uid="uid://bvcvgi7d5xush" path="res://Assets The Ripper/PathFinding_menu/euclidean_button.png" id="5_nyw2n"]
+[ext_resource type="Texture2D" uid="uid://oa7ees5bv7sc" path="res://Assets The Ripper/PathFinding_menu/manhattan_hover.png" id="5_pb7wt"]
+[ext_resource type="Texture2D" uid="uid://byuc15ojyn3i0" path="res://Assets The Ripper/PathFinding_menu/euclidean_hover.png" id="7_6v7s6"]
+[ext_resource type="Texture2D" uid="uid://oebi1udi2ljh" path="res://Assets The Ripper/selectMenu/backButton.png" id="8_6tpkn"]
+[ext_resource type="Texture2D" uid="uid://b3vaqc606rmhm" path="res://Assets The Ripper/selectMenu/hoverBack.png" id="9_lx474"]
+
+[node name="AlgorithmSelection" type="Control" unique_id=498242202]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_pb7wt")
+ucs_selected = ExtResource("4_6v7s6")
+manhattan_selected = ExtResource("3_lx474")
+euclidean_selected = ExtResource("4_p630v")
+
+[node name="Background" type="TextureRect" parent="." unique_id=902582757]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1240.0
+offset_bottom = 680.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g5lrc")
+expand_mode = 1
+
+[node name="ucs_button" type="TextureButton" parent="." unique_id=1842598100]
+layout_mode = 0
+offset_left = 433.0
+offset_top = 213.0
+offset_right = 969.0
+offset_bottom = 416.0
+scale = Vector2(0.7, 0.7)
+texture_normal = ExtResource("2_yqsvm")
+texture_hover = ExtResource("3_cuu4d")
+
+[node name="manhattan_button" type="TextureButton" parent="." unique_id=687399868]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 352.0
+offset_right = 640.00006
+offset_bottom = 552.0
+scale = Vector2(0.7, 0.7)
+texture_normal = ExtResource("4_trtwh")
+texture_hover = ExtResource("5_pb7wt")
+
+[node name="euclidean_button" type="TextureButton" parent="." unique_id=841488913]
+layout_mode = 0
+offset_left = 783.0
+offset_top = 347.0
+offset_right = 1331.0
+offset_bottom = 554.0
+scale = Vector2(0.7, 0.7)
+texture_normal = ExtResource("5_nyw2n")
+texture_hover = ExtResource("7_6v7s6")
+
+[node name="back_button" type="TextureButton" parent="." unique_id=1441276954]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 83.0
+offset_top = 559.0
+offset_right = 2116.0
+offset_bottom = 1278.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.08, 0.08)
+texture_normal = ExtResource("8_6tpkn")
+texture_hover = ExtResource("9_lx474")

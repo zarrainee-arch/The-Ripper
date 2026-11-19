@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://de55p51ilmuue"]
 
 [ext_resource type="Script" uid="uid://d2pfpe6pr270v" path="res://scripts/grid.gd" id="1_ig7tw"]
-[ext_resource type="Texture2D" uid="uid://binmp54mks7d6" path="res://Assets The Ripper/TERANG.png" id="1_lquwl"]
 [ext_resource type="Script" uid="uid://dfwr56ot7yagu" path="res://game.gd" id="1_w48qg"]
 [ext_resource type="Script" uid="uid://vy6a0x0waruh" path="res://scripts/player.gd" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://chukw4fg13wg8" path="res://Assets The Ripper/new_bg.png" id="2_ryguw"]
 [ext_resource type="Script" uid="uid://cb1wsfvk5osyt" path="res://scripts/npc.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://cl0d8hbtyatfe" path="res://scripts/obstacle.gd" id="4_5vw27"]
 [ext_resource type="Texture2D" uid="uid://bps5xfbhpv4tu" path="res://Assets The Ripper/IdlePlayer.png" id="6_7mycd"]
@@ -15,11 +15,19 @@
 [ext_resource type="Script" uid="uid://crltqrq5xtgu4" path="res://scripts/battle_ui.gd" id="9_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bsthml0kfu4eq" path="res://Assets The Ripper/newattack.png" id="10_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://cr6otthskdth7" path="res://Assets The Ripper/The Ripper.png" id="10_efxa6"]
-[ext_resource type="Texture2D" uid="uid://dt6olt8n4pusm" path="res://Assets The Ripper/battle/Knife_walk.png" id="11_82xsv"]
-[ext_resource type="Texture2D" uid="uid://df00ct6gcmt6r" path="res://Assets The Ripper/battle/Heavy_idle.png" id="11_getpj"]
+[ext_resource type="Texture2D" uid="uid://df00ct6gcmt6r" path="res://Assets The Ripper/battle/Heavy_idle.png" id="11_ryguw"]
+[ext_resource type="Texture2D" uid="uid://yaekx8f2atp5" path="res://Assets The Ripper/battle/heavy_battle.png" id="12_d13ii"]
+[ext_resource type="Texture2D" uid="uid://dt6olt8n4pusm" path="res://Assets The Ripper/battle/Knife_walk.png" id="13_1u8w0"]
 [ext_resource type="Script" uid="uid://c16hpltv3wdxj" path="res://scripts/battle/battle_system.gd" id="13_w48qg"]
+[ext_resource type="Texture2D" uid="uid://b4d7fypbomu72" path="res://Assets The Ripper/battle/knife_battle.png" id="14_0odxb"]
 [ext_resource type="AudioStream" uid="uid://bmefmx8dpp0xq" path="res://Assets The Ripper/Audio/ncone-mysterious-melody-loop-197040.mp3" id="17_yaehf"]
 [ext_resource type="AudioStream" uid="uid://dksd247flp2gv" path="res://Assets The Ripper/Audio/gargamel10-sword-slashing-game-sound-effect-1-379228.mp3" id="18_074og"]
+[ext_resource type="Texture2D" uid="uid://ctjgtw86m4b4d" path="res://Assets The Ripper/battle/attack_button.png" id="20_d13ii"]
+[ext_resource type="Texture2D" uid="uid://bxjjjhbaxek8a" path="res://Assets The Ripper/battle/attack_hover.png" id="21_1u8w0"]
+[ext_resource type="Texture2D" uid="uid://d4byxbonrpism" path="res://Assets The Ripper/battle/defend_button.png" id="22_xuqvo"]
+[ext_resource type="Texture2D" uid="uid://ca40d24ulxlta" path="res://Assets The Ripper/battle/defend_hover.png" id="23_qsp4k"]
+[ext_resource type="Texture2D" uid="uid://dal7kalq1kbii" path="res://Assets The Ripper/battle/potion_button.png" id="24_kq58d"]
+[ext_resource type="Texture2D" uid="uid://bh7shnjbj82gu" path="res://Assets The Ripper/battle/potion_hover.png" id="25_seu75"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2cqfq"]
 atlas = ExtResource("7_vivmo")
@@ -67,6 +75,22 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_84bvq"]
 radius = 7.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_84bvq"]
+bg_color = Color(0.16078432, 0.16078432, 0.16078432, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.84705883, 0.84705883, 0.84705883, 1)
+corner_detail = 2
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_428ds"]
+bg_color = Color(0.78431374, 0.23137255, 0.2627451, 1)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_0odxb"]
 atlas = ExtResource("10_2cqfq")
 region = Rect2(204, 0, 204, 192)
@@ -103,8 +127,149 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_wnkbs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_84bvq"]
+size = Vector2(15.697121, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6liis"]
+atlas = ExtResource("11_ryguw")
+region = Rect2(0, 0, 1774, 242.25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsp4k"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(0, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kq58d"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(271, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_seu75"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(542, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_htxhm"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(813, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jq2sk"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(1084, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4k2k6"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(1355, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0rl1p"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(1626, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ok6jj"]
+atlas = ExtResource("12_d13ii")
+region = Rect2(1897, 0, 271, 724)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_facbu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qsp4k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kq58d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_seu75")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_htxhm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jq2sk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4k2k6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0rl1p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ok6jj")
+}],
+"loop": 0,
+"name": &"Attack",
+"speed": 8.0
+}]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_gdgnw"]
 radius = 7.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e6adh"]
+atlas = ExtResource("13_1u8w0")
+region = Rect2(0, 0, 1774, 246.625)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1qrp"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(0, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_come4"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(271, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h8e4i"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(542, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4lmeg"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(813, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0cp0l"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(1084, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2t1y"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(1355, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gngh3"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(1626, 0, 271, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0n3wm"]
+atlas = ExtResource("14_0odxb")
+region = Rect2(1897, 0, 271, 724)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qnost"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b1qrp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_come4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h8e4i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4lmeg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0cp0l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2t1y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gngh3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0n3wm")
+}],
+"loop": 0,
+"name": &"Attack",
+"speed": 8.0
+}]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdgnw"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -153,9 +318,9 @@ script = ExtResource("1_w48qg")
 metadata/_edit_horizontal_guides_ = [202.0]
 
 [node name="GroundMap2" type="Sprite2D" parent="." unique_id=1991564708]
-position = Vector2(918, 352.00003)
+position = Vector2(1058, 433)
 scale = Vector2(1.0941985, 1.0827577)
-texture = ExtResource("1_lquwl")
+texture = ExtResource("2_ryguw")
 
 [node name="Grid" type="Node2D" parent="." unique_id=25619696]
 visible = false
@@ -172,69 +337,33 @@ collision_mask = 0
 script = ExtResource("4_5vw27")
 
 [node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="Obstacle" unique_id=1644554609]
-polygon = PackedVector2Array(-789.7045, 79.81256, -790.6279, 220.16345, -689.98157, 221.08679, -693.675, 100.126495, -694.5984, 86.27609, -764.7738, 86.27609, -773.08405, 81.6593, -784.16437, 80.73593)
+position = Vector2(-17.774704, -318.15604)
+polygon = PackedVector2Array(-858.72577, 287.16528, -803.3241, 288.08862, -805.17084, 179.13202, -694.3675, 180.97874, -585.4109, 55.401634, -452.4469, 53.55491, -76.63898, 51.70819, -75.715576, 80.33238, -45.24469, 81.255745, -41.55121, 101.56969, 50.78485, 103.41641, 51.708252, 78.48566, 252.07764, 79.40902, 251.15417, 96.02952, 335.18005, 96.95288, 334.2567, 79.40902, 372.1145, 79.40902, 374.88464, 55.401634, 513.3888, 55.401634, 661.1266, 56.324997, 662.0499, 81.255745, 645.42944, 82.17911, 590.95105, 103.41641, 597.4147, 207.75621, 617.7285, 207.75621, 619.5753, 228.99352, 651.89294, 228.07016, 651.89294, 271.46814, 999.07666, 274.23822, 999.07666, 232.68695, 1106.1865, 233.61032, 1108.9567, 289.012, 1149.5846, 290.85873, 1147.7378, -16.620527, 762.6963, -15.697166, -27.700806, -14.773806, -598.33795, -12.927083, -754.386, -14.773806, -855.03235, -15.697166)
 disabled = true
 
 [node name="CollisionPolygon2D7" type="CollisionPolygon2D" parent="Obstacle" unique_id=1085111215]
-polygon = PackedVector2Array(-536.7036, -3.289917, -537.62695, 86.27609, -329.87073, 88.1228, -332.6408, -37.454285, -369.5753, -36.530914, -372.34537, -5.1366577, -493.30566, -6.983368)
+position = Vector2(-85.18006, -210.1228)
+polygon = PackedVector2Array(-536.7036, -3.289917, -557.7101, 51.70823, -558.6334, 112.65005, -587.2576, 117.26685, -585.4109, 206.83289, -379.5014, 203.13943, -205.90955, 192.05908, -205.90955, 74.792244, -239.15051, 33.241005, -255.77103, 1.8467255, -277.9317, 1.8467255, -277.00833, -31.394272, -351.80057, -28.624191, -383.19485, -28.624191, -494.92154, -28.624191, -495.8449, -0.9233551)
 disabled = true
 
 [node name="CollisionPolygon2D8" type="CollisionPolygon2D" parent="Obstacle" unique_id=1086984887]
-position = Vector2(0.6925208, -12.523536)
-polygon = PackedVector2Array(-278.16254, -2.3665771, -281.85596, 133.36752, -157.89471, 132.04062, -131.34814, 123.21054, -135.04156, 92.739624, -159.04895, 92.739624, -161.81903, 7.7904053, -273.54572, 6.867035)
+position = Vector2(-499.76917, 212.77657)
+polygon = PackedVector2Array(-374.88458, -80.3324, -369.34442, 251.15424, -216.06648, 253.00092, 329.63992, 247.46075, 541.0896, 247.46075, 975.06934, 248.38416, 1396.122, 248.38416, 1634.3491, 248.38416, 1627.8856, -80.3324, 1590.0278, -78.48569, 1590.0278, 38.78119, 1576.1774, 36.93445, 1543.8597, 21.237305, 1512.4655, 38.78119, 1490.3048, 56.325012, 1472.761, 88.6427, 1475.531, 123.73041, 1445.06, 155.1247, 1417.3593, 187.44232, 1000.0001, 190.2124, 983.3795, 160.66486, 970.4525, 185.59558, 945.5217, 184.67224, 935.36475, 169.89844, 898.4303, 154.2013, 869.80615, 161.5882, 855.9557, 145.89105, 823.63806, 145.89105, 808.8644, 132.04065, 803.3242, 108.956604, 788.5504, 102.4931, 771.92993, 110.803345, 772.51953, 133.20215, 756.2328, 130.19391, 754.386, 168.0517, 505.07852, 163.43494, 500.4617, 155.1247, 499.53836, 133.88739, 490.30472, 132.96399, 489.38138, 116.343506, 479.2244, 107.10986, 470.91415, 98.79962, 464.45065, 105.26318, 451.5236, 114.496765, 452.44693, 131.11731, 439.51987, 130.19391, 439.51987, 145.89105, 404.43216, 145.89105, 373.96127, 151.43121, 349.95383, 166.20502, 296.3989, 165.28162, 298.24564, 182.8255, 257.61777, 182.8255, 237.3038, 163.43494, 222.53006, 187.44232, -147.73776, 189.289, -178.20868, 164.35828, -216.98984, 139.42755, -210.5263, 103.41644, -223.45813, 55.71411, -277.0083, 24.930786, -320.40628, 46.16809, -328.71652, -77.56232)
 disabled = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Obstacle" unique_id=606664264]
-polygon = PackedVector2Array(-808.17175, -405.87537, -807.2484, -355.09048, -771.2373, -352.3204, -771.2373, -265.52448, -698.2918, -265.52448, -700.13855, -335.69992, -635.5033, -336.62326, -639.1967, -292.30194, -476.68515, -294.14865, -477.60852, -444.65652, -769.3906, -444.65652, -771.2373, -399.41183)
-disabled = true
-
-[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Obstacle" unique_id=410805346]
-polygon = PackedVector2Array(-425.9003, -441.88644, -424.97693, -286.76178, -53, -286, -55, -302, 20, -301, 20, -285, 324, -282, 324, -441, 207, -449, 190, -457, 168, -448, 69, -447, 69.02124, -446.50323, -87.950134, -449.27332, -96, -448, -105, -451, -105, -460, -120, -462, -123, -447, -335, -448, -352.95477, -446.50323, -368.65192, -442.80978, -389.88922, -443.73315, -399, -446)
-disabled = true
-
-[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Obstacle" unique_id=56913773]
-position = Vector2(-3.9242845, -6.983369)
-polygon = PackedVector2Array(-255, -217, -256, -58, -108, -59, -109, -216)
-disabled = true
-
-[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Obstacle" unique_id=495150797]
-polygon = PackedVector2Array(-779.5476, -223.04987, -779.5476, 14.253937, -614.266, 14.253937, -613.3426, -33.760834, -442, -33, -437, -105, -416, -97, -401, -103, -316, -103, -319.71375, -208.2761, -320, -235, -336, -225, -363.11176, -227.66666, -371.422, -233.20683, -401, -223, -503, -223, -512.6962, -218.43306, -520, -224, -751, -222, -758.3103, -222.1265, -770.31396, -222.1265)
-disabled = true
-
-[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="Obstacle" unique_id=1435356611]
-position = Vector2(-2.0775623, -6.983369)
-polygon = PackedVector2Array(57, -215, 54, -58, 200, -57, 202, -107, 246, -107, 244, -216)
-disabled = true
-
-[node name="CollisionPolygon2D9" type="CollisionPolygon2D" parent="Obstacle" unique_id=1415417216]
-position = Vector2(-0.23084027, -6.060008)
-polygon = PackedVector2Array(120.960266, 3.6934204, 119, 126, 224, 127, 221.60663, 7.3868713)
+position = Vector2(253.69345, 574.73413)
+polygon = PackedVector2Array(-812.5578, -417.35925, -811.6344, -270.54486, -765.4663, -268.69806, -722.9917, -270.54474, -669.43677, -268.69806, -614.0351, -267.77466, -556.7867, -268.69806, -494.9215, -270.54474, -463.52722, -302.86243, -465.37396, -388.735, -502.3084, -399.8153, -518.00555, -429.36285, -539.24286, -457.98706, -732.22534, -458.91043, -769.3906, -444.65652, -771.2373, -399.41183)
 disabled = true
 
 [node name="CollisionPolygon2D10" type="CollisionPolygon2D" parent="Obstacle" unique_id=907570058]
-position = Vector2(0.69252086, -0.5198417)
-polygon = PackedVector2Array(246, -40, 245.61407, 98.79962, 432.133, 98.79962, 434.67218, -60.5383, 376.50043, -61.46167, 358.03326, -61.46167, 317.40533, -60.5383, 307.24835, -63.30841, 258.31024, -63.30841)
-disabled = true
-
-[node name="CollisionPolygon2D11" type="CollisionPolygon2D" parent="Obstacle" unique_id=194249731]
-polygon = PackedVector2Array(497, -70, 500.70975, 79.31642, 503.00092, 81.6593, 594.41364, 84.42938, 592, 54, 666, 54, 680.2863, 80.73593, 780.93256, 89.96954, 780, 39, 776, -66, 765, -106, 741, -116, 711, -99, 709, -81, 699, -84, 694, -108, 673, -103, 672.89935, -101.1662, 561.17267, -98.39612, 528, -104)
-disabled = true
-
-[node name="CollisionPolygon2D12" type="CollisionPolygon2D" parent="Obstacle" unique_id=2036895563]
-polygon = PackedVector2Array(366, -435, 361, -230, 326, -230, 313, -236, 309, -220, 305.40167, -162.10803, 492.84393, -162.10803, 493, -176, 544, -178, 556.55585, -160.2613, 772.6224, -157.49123, 770, -433, 766, -454, 753, -455, 752, -447, 585, -448, 574, -452, 567, -448, 536, -449, 522.39154, -447.4266, 499, -448, 456, -447, 446, -455, 432, -447, 393, -443, 380, -452)
+position = Vector2(260.15698, 190.6159)
+polygon = PackedVector2Array(228.07019, -49.86151, 196.6759, -32.317657, 194.82922, 69.252075, 228.07019, 71.098816, 228.99365, 99.72296, 432.133, 98.79962, 566.9437, 97.87628, 566.0204, -53.554962, 542.01294, -57.248383, 542.01294, -79.40906, 461.68054, -79.40906, 438.59656, -96.02957, 396.12195, -122.80704, 361.03418, -102.4931, 336.10352, -72.02219, 306.5559, -70.175446, 248.38416, -72.945526)
 disabled = true
 
 [node name="CollisionPolygon2D13" type="CollisionPolygon2D" parent="Obstacle" unique_id=69325457]
-polygon = PackedVector2Array(-60.24933, -19.91043, -72.25299, -3.289917, -72.25299, 29.95108, -51.015686, 53.958466, -16.851318, 60.421997, 17.312988, 52.111725, 35.780212, 27.181, 33.01013, -5.1366577, 13.619568, -28.220673, -6.694397, -35.607574, -13.157898, -40.224365, -19.621399, -48.534607, -24.23822, -41.147736, -32.548462, -33.760834)
-disabled = true
-
-[node name="CollisionPolygon2D14" type="CollisionPolygon2D" parent="Obstacle" unique_id=1873589720]
-position = Vector2(-6.694368, -7.90673)
-polygon = PackedVector2Array(-773, 273, -781.3943, 406.68237, -626, 420, -627.193, 426.99634, -566.2512, 427.91968, -565, 416, -506, 417, -495.15237, 434.38324, -479.45523, 430.68976, -470, 418, -396, 420, -400.96954, 437.15332, -362.1884, 434.38324, -352.95477, 423.30286, -190, 425, -191, 446, -54.47827, 445.9834, -53, 260, -57, 232, -86, 224, -97, 146, -107, 124, -121, 142, -123, 159, -154, 159, -168.0517, 160.66483, -185.59558, 157.89474, -198, 156, -225, 161, -239, 161, -377, 162, -382, 148, -478, 142, -570, 141, -582, 129, -599, 131, -598, 146, -608, 144, -616, 135, -620, 145, -625.1154, 244.69067, -645.4294, 243.76733, -648, 262, -766, 267)
-disabled = true
-
-[node name="CollisionPolygon2D15" type="CollisionPolygon2D" parent="Obstacle" unique_id=544985991]
-polygon = PackedVector2Array(64, 141, 62, 208, 59, 223, 28, 224, 27, 254, 19, 265, 20, 382, 19.159729, 439.9234, 168.7442, 440.84674, 168, 431, 250.9234, 430.68976, 250.9234, 437.15332, 309.09515, 437.15332, 310.0185, 422.37952, 345.10614, 427.91968, 457.7563, 427.91968, 464.2198, 439, 485.4571, 439.9234, 638.73505, 438.07666, 641.50507, 433.45984, 795.70636, 431.61316, 795.70636, 414.9926, 796.6297, 391.90863, 780.93256, 391.90863, 781, 156, 767, 139, 762, 146, 660, 149, 648, 139, 628, 138, 496, 140, 471, 132, 467, 147, 447, 149, 450, 280, 642, 275, 643, 306, 629, 311, 627, 331, 623, 381, 536, 383, 535, 335, 517, 312, 498, 312, 498, 322, 496, 337, 401, 333, 402, 175, 230, 175, 227, 153, 210, 162, 169, 162, 141, 139, 123, 155, 99, 161, 85, 135, 74, 121)
+position = Vector2(146.58357, 38.261322)
+polygon = PackedVector2Array(-68.328735, -22.160675, -89.56604, 5.540161, -88.64264, 49.86148, -65.558655, 76.63898, -22.160645, 89.56601, 19.390564, 84.02585, 54.47827, 61.865173, 63.711914, 28.624176, 55.40161, -13.850433, 25.854126, -33.240997, 4.6168213, -39.70453, -19.390564, -56.325043, -32.317627, -41.55124, -48.93811, -38.78116)
 disabled = true
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1602671785]
@@ -243,7 +372,6 @@ scale = Vector2(1.083, 1.083)
 script = ExtResource("2_0xm2m")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=363023756]
-position = Vector2(-11.080334, -26.777473)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("6_7mycd")
 hframes = 8
@@ -261,82 +389,184 @@ shape = SubResource("CircleShape2D_84bvq")
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=528699897]
 zoom = Vector2(1.4, 1.4)
-limit_left = 0
-limit_top = 0
-limit_right = 1820
-limit_bottom = 720
+limit_left = -27
+limit_top = 4
+limit_right = 2143
+limit_bottom = 862
+
+[node name="HealthBar" type="ProgressBar" parent="Player" unique_id=472200347]
+offset_left = -14.773778
+offset_top = -32.317657
+offset_right = 30.226223
+offset_bottom = -28.624207
+theme_override_styles/background = SubResource("StyleBoxFlat_84bvq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_428ds")
+value = 100.0
+show_percentage = false
 
 [node name="NPC" type="CharacterBody2D" parent="." unique_id=279480073]
 position = Vector2(1400, 500)
 scale = Vector2(1.083, 1.083)
+slide_on_ceiling = false
 script = ExtResource("3_h2yge")
-pathfinding_mode = 2
+pathfinding_mode = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="NPC" unique_id=1045065238]
-position = Vector2(19.390583, -51.70822)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("7_5vw27")
 hframes = 8
 
 [node name="BattleNPC" type="AnimatedSprite2D" parent="NPC" unique_id=1542303404]
 visible = false
+position = Vector2(12.927055, -3.6934443)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_gdgnw")
 animation = &"Attack"
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NPC" unique_id=433132044]
+position = Vector2(3.6934443, 6.4635277)
 scale = Vector2(1.1, 1.1)
-shape = SubResource("CircleShape2D_gdgnw")
-disabled = true
+shape = SubResource("CircleShape2D_wnkbs")
 
-[node name="Heavy" type="CharacterBody2D" parent="." unique_id=617194598]
+[node name="RoleLabel" type="Label" parent="NPC" unique_id=872829710]
+offset_left = -17.54386
+offset_top = -56.325024
+offset_right = 25.45614
+offset_bottom = -33.325024
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 8
+text = "FOLLOWER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthBar" type="ProgressBar" parent="NPC" unique_id=238248007]
+offset_left = -19.390615
+offset_top = -38.781162
+offset_right = 25.609385
+offset_bottom = -35.08771
+theme_override_styles/background = SubResource("StyleBoxFlat_84bvq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_428ds")
+value = 100.0
+show_percentage = false
+
+[node name="TargetArea" type="Area2D" parent="NPC" unique_id=1563192770]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/TargetArea" unique_id=710355149]
+position = Vector2(2.3085938, 0)
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_84bvq")
+
+[node name="Heavy" type="CharacterBody2D" parent="." unique_id=751572788]
 position = Vector2(1400, 500)
 scale = Vector2(1.083, 1.083)
+slide_on_ceiling = false
 script = ExtResource("3_h2yge")
-pathfinding_mode = 2
+pathfinding_mode = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="Heavy" unique_id=23504600]
-position = Vector2(11.080333, -108.95661)
+[node name="Sprite2D" type="Sprite2D" parent="Heavy" unique_id=155471626]
+position = Vector2(130.19391, -81.255775)
 scale = Vector2(0.3, 0.3)
-texture = ExtResource("11_getpj")
+texture = SubResource("AtlasTexture_6liis")
 hframes = 8
-region_enabled = true
-region_rect = Rect2(0, 0, 1774, 256.125)
 
-[node name="BattleNPC" type="AnimatedSprite2D" parent="Heavy" unique_id=2122974852]
+[node name="BattleNPC" type="AnimatedSprite2D" parent="Heavy" unique_id=50574642]
 visible = false
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_gdgnw")
+position = Vector2(135.73407, -74.792244)
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_facbu")
 animation = &"Attack"
+frame = 7
+frame_progress = 1.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Heavy" unique_id=375175246]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Heavy" unique_id=1375497686]
+position = Vector2(134.81071, -72.945526)
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CircleShape2D_gdgnw")
-disabled = true
 
-[node name="KnifeThug" type="CharacterBody2D" parent="." unique_id=516458469]
+[node name="RoleLabel" type="Label" parent="Heavy" unique_id=2048629016]
+offset_left = 114.49672
+offset_top = -136.65744
+offset_right = 157.49672
+offset_bottom = -113.65744
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 8
+text = "FOLLOWER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthBar" type="ProgressBar" parent="Heavy" unique_id=300364771]
+offset_left = 112.65001
+offset_top = -119.11357
+offset_right = 157.65001
+offset_bottom = -115.42012
+theme_override_styles/background = SubResource("StyleBoxFlat_84bvq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_428ds")
+value = 100.0
+show_percentage = false
+
+[node name="TargetArea" type="Area2D" parent="Heavy" unique_id=372894888]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Heavy/TargetArea" unique_id=2115448018]
+position = Vector2(135.73404, -78.48569)
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_84bvq")
+
+[node name="Knife" type="CharacterBody2D" parent="." unique_id=1415066919]
 position = Vector2(1400, 500)
 scale = Vector2(1.083, 1.083)
+slide_on_ceiling = false
 script = ExtResource("3_h2yge")
-pathfinding_mode = 2
+pathfinding_mode = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="KnifeThug" unique_id=2126504677]
+[node name="Sprite2D" type="Sprite2D" parent="Knife" unique_id=857407125]
+position = Vector2(16.620514, -100.646355)
 scale = Vector2(0.3, 0.3)
-texture = ExtResource("11_82xsv")
+texture = SubResource("AtlasTexture_e6adh")
 hframes = 8
-region_enabled = true
-region_rect = Rect2(38, 16.5, 1774, 212.625)
 
-[node name="BattleNPC" type="AnimatedSprite2D" parent="KnifeThug" unique_id=1503344493]
+[node name="BattleNPC" type="AnimatedSprite2D" parent="Knife" unique_id=1061471314]
 visible = false
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_gdgnw")
+position = Vector2(24.00739, -94.18282)
+scale = Vector2(0.22, 0.22)
+sprite_frames = SubResource("SpriteFrames_qnost")
 animation = &"Attack"
+frame = 7
+frame_progress = 1.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="KnifeThug" unique_id=1036603465]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Knife" unique_id=578574184]
+position = Vector2(20.313944, -91.41274)
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CircleShape2D_gdgnw")
-disabled = true
+
+[node name="RoleLabel" type="Label" parent="Knife" unique_id=1216473745]
+offset_left = 0.92341447
+offset_top = -151.43123
+offset_right = 43.923416
+offset_bottom = -128.43123
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 8
+text = "FOLLOWER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthBar" type="ProgressBar" parent="Knife" unique_id=923346736]
+offset_left = -1.5258789e-05
+offset_top = -133.88736
+offset_right = 44.999985
+offset_bottom = -130.19391
+theme_override_styles/background = SubResource("StyleBoxFlat_84bvq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_428ds")
+value = 100.0
+show_percentage = false
+
+[node name="TargetArea" type="Area2D" parent="Knife" unique_id=1926813132]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Knife/TargetArea" unique_id=1670128219]
+position = Vector2(21.23727, -97.87627)
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_84bvq")
 
 [node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=1465451785]
 script = ExtResource("9_kek77")
@@ -345,6 +575,7 @@ script = ExtResource("9_kek77")
 script = ExtResource("9_ycdy4")
 
 [node name="BattlePanel" type="Panel" parent="BattleUI" unique_id=1557023578]
+visible = false
 offset_left = 230.0
 offset_top = 470.0
 offset_right = 1050.0
@@ -352,15 +583,17 @@ offset_bottom = 700.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_gdgnw")
 
 [node name="PanelFrame" type="TextureRect" parent="BattleUI/BattlePanel" unique_id=960737882]
+visible = false
 layout_mode = 0
 offset_left = -65.0
-offset_top = -73.0
+offset_top = -100.0
 offset_right = 885.0
-offset_bottom = 283.0
+offset_bottom = 320.0
 texture = ExtResource("9_efxa6")
 expand_mode = 1
 
 [node name="PlayerInfo" type="VBoxContainer" parent="BattleUI/BattlePanel" unique_id=2080983622]
+visible = false
 layout_mode = 0
 offset_left = 30.0
 offset_top = 25.0
@@ -369,31 +602,37 @@ offset_bottom = 115.0
 alignment = 1
 
 [node name="PlayerDetails" type="HBoxContainer" parent="BattleUI/BattlePanel/PlayerInfo" unique_id=207047530]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
 [node name="PlayerPortrait" type="TextureRect" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails" unique_id=103870256]
+visible = false
 custom_minimum_size = Vector2(80, 70)
 layout_mode = 2
 texture = ExtResource("9_4c57u")
 expand_mode = 1
 
 [node name="PlayerStats" type="VBoxContainer" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails" unique_id=469879710]
+visible = false
 layout_mode = 2
 alignment = 1
 
 [node name="PlayerName" type="Label" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails/PlayerStats" unique_id=1681924070]
+visible = false
 layout_mode = 2
 text = "PLAYER"
 
 [node name="PlayerHP" type="ProgressBar" parent="BattleUI/BattlePanel/PlayerInfo/PlayerDetails/PlayerStats" unique_id=865705260]
+visible = false
 custom_minimum_size = Vector2(150, 18)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_kek77")
 value = 100.0
 
 [node name="NPCInfo" type="VBoxContainer" parent="BattleUI/BattlePanel" unique_id=1570678922]
+visible = false
 layout_mode = 0
 offset_left = 530.0
 offset_top = 25.0
@@ -402,25 +641,30 @@ offset_bottom = 115.0
 alignment = 1
 
 [node name="NPCDetails" type="HBoxContainer" parent="BattleUI/BattlePanel/NPCInfo" unique_id=1346011535]
+visible = false
 layout_mode = 2
 alignment = 1
 
 [node name="NPCStats" type="VBoxContainer" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails" unique_id=143605776]
+visible = false
 layout_mode = 2
 alignment = 1
 
 [node name="NPCName" type="Label" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails/NPCStats" unique_id=1384060940]
+visible = false
 layout_mode = 2
 text = "THE RIPPER"
 horizontal_alignment = 2
 
 [node name="NPCHP" type="ProgressBar" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails/NPCStats" unique_id=647289603]
+visible = false
 custom_minimum_size = Vector2(150, 18)
 layout_mode = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_4c57u")
 value = 100.0
 
 [node name="NPCPortrait" type="TextureRect" parent="BattleUI/BattlePanel/NPCInfo/NPCDetails" unique_id=2115292054]
+visible = false
 custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
 texture = ExtResource("10_efxa6")
@@ -428,39 +672,70 @@ expand_mode = 1
 
 [node name="TurnLabel" type="Label" parent="BattleUI/BattlePanel" unique_id=9266374]
 layout_mode = 0
-offset_left = 286.0
+offset_left = 340.0
 offset_top = 65.0
-offset_right = 531.0
+offset_right = 480.0
 offset_bottom = 100.0
 text = "YOUR TURN"
 horizontal_alignment = 1
-autowrap_mode = 2
-clip_text = true
 
-[node name="ActionButtons" type="HBoxContainer" parent="BattleUI/BattlePanel" unique_id=973820187]
+[node name="ActionButtons" type="Control" parent="BattleUI" unique_id=232533917]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 490.0
+offset_top = 620.0
+offset_right = 946.0
+offset_bottom = 1060.0
+
+[node name="TextureButton" type="TextureButton" parent="BattleUI/ActionButtons" unique_id=1504277168]
 layout_mode = 0
-offset_left = 260.0
-offset_top = 150.0
-offset_right = 560.0
-offset_bottom = 198.0
-alignment = 1
+offset_left = -64.0
+offset_top = -45.999985
+offset_right = 392.0
+offset_bottom = 394.0
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("20_d13ii")
+texture_hover = ExtResource("21_1u8w0")
 
-[node name="AttackButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=1095507215]
+[node name="TextureButton2" type="TextureButton" parent="BattleUI/ActionButtons" unique_id=197851702]
+layout_mode = 0
+offset_left = 78.0
+offset_top = -48.0
+offset_right = 534.0
+offset_bottom = 392.0
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("22_xuqvo")
+texture_hover = ExtResource("23_qsp4k")
+
+[node name="TextureButton3" type="TextureButton" parent="BattleUI/ActionButtons" unique_id=2142441290]
+layout_mode = 0
+offset_left = 227.0
+offset_top = -47.999985
+offset_right = 686.0
+offset_bottom = 404.0
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("24_kq58d")
+texture_hover = ExtResource("25_seu75")
+
+[node name="AttackButton" type="Button" parent="BattleUI/ActionButtons" unique_id=1095507215]
+visible = false
 custom_minimum_size = Vector2(95, 48)
-layout_mode = 2
+layout_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_efxa6")
 text = "ATTACK
 "
 
-[node name="DefendButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=1229654913]
+[node name="DefendButton" type="Button" parent="BattleUI/ActionButtons" unique_id=1229654913]
+visible = false
 custom_minimum_size = Vector2(95, 48)
-layout_mode = 2
+layout_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_dg77c")
 text = "DEFEND"
 
-[node name="PotionButton" type="Button" parent="BattleUI/BattlePanel/ActionButtons" unique_id=2135776452]
+[node name="PotionButton" type="Button" parent="BattleUI/ActionButtons" unique_id=2135776452]
+visible = false
 custom_minimum_size = Vector2(95, 48)
-layout_mode = 2
+layout_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_ycdy4")
 text = "POTION
 "

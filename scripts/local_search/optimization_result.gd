@@ -1,4 +1,4 @@
-﻿extends RefCounted
+extends RefCounted
 class_name OptimizationResult
 
 # Alasan penghentian ketika target berhasil dicapai.

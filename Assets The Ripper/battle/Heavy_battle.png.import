@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctm8av2doc57m"
-path="res://.godot/imported/Heavy_battle.png-ab68ec082aec5b3c529625d6c59078bc.ctex"
+uid="uid://yaekx8f2atp5"
+path="res://.godot/imported/heavy_battle.png-dd88bf0cd0145e692a62c9e2f843b2f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets The Ripper/battle/Heavy_battle.png"
-dest_files=["res://.godot/imported/Heavy_battle.png-ab68ec082aec5b3c529625d6c59078bc.ctex"]
+source_file="res://Assets The Ripper/battle/heavy_battle.png"
+dest_files=["res://.godot/imported/heavy_battle.png-dd88bf0cd0145e692a62c9e2f843b2f7.ctex"]
 
 [params]
 

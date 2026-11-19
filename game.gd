@@ -1,4 +1,3 @@
-
 extends Node2D
 
 const SAFE_HOUSE_CELL = Vector2i(30, 16)
@@ -43,7 +42,7 @@ func _ready() -> void:
 
 	npc_templates = [
 		get_node("NPC") as CharacterBody2D,
-		get_node("KnifeThug") as CharacterBody2D,
+		get_node("Knife") as CharacterBody2D,
 		get_node("Heavy") as CharacterBody2D
 	]
 
@@ -56,7 +55,7 @@ func _ready() -> void:
 
 	npcs.clear()
 	csp_solver = CSPRoleAssignment.new()
-	
+
 	var tester := CSPRoleAssignment.new()
 	tester.run_csp_tests()
 
@@ -224,49 +223,40 @@ func spawn_configured_npcs(
 	print("NPC roles: ", npc_roles)
 
 
-func add_role_label(
-	enemy: CharacterBody2D,
-	role: String
-) -> void:
+func add_role_label(enemy: CharacterBody2D, role: String) -> void:
 	if enemy == null:
 		return
 
-	var existing_label = enemy.get_node_or_null("RoleLabel")
-	if existing_label != null:
-		enemy.remove_child(existing_label)
-		existing_label.free()
+	var role_label = enemy.get_node_or_null("RoleLabel") as Label
 
-	var role_label := Label.new()
-	role_label.name = "RoleLabel"
+	if role_label == null:
+		push_warning("RoleLabel tidak ditemukan pada " + enemy.name)
+		return
+
 	role_label.text = role
-	role_label.position = Vector2(-50, -45)
-	role_label.custom_minimum_size = Vector2(100, 22)
-	role_label.size = Vector2(100, 22)
-
-	role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	role_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	role_label.add_theme_font_size_override("font_size", 12)
-
+	
+	role_label.add_theme_color_override(
+	"font_outline_color", Color.BLACK
+	)
+	
+	role_label.add_theme_constant_override(
+	"outline_size", 3
+	)
+	
+	# Warna berdasarkan role
 	if role == "LEADER":
 		role_label.add_theme_color_override(
-			"font_color",
-			Color("#ffcc66")
-		)
+			"font_color", Color("#ffcc66")
+	)
 	else:
 		role_label.add_theme_color_override(
-			"font_color",
-			Color("#ffffff")
-		)
-
-	role_label.add_theme_color_override(
-		"font_outline_color",
-		Color.BLACK
+		"font_color", Color.WHITE
 	)
-	role_label.add_theme_constant_override("outline_size", 4)
+
+	
 	role_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	role_label.z_index = 10
-
-	enemy.add_child(role_label)
+	role_label.visible = true
 
 
 func find_spawn_cell(origin: Vector2i) -> Vector2i:

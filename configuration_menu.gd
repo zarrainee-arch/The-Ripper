@@ -20,11 +20,44 @@ const MAX_NPC: int = 10
 @onready var knife_angka: Label = $ContentPanel/Pages/NPCCountPanel/KnifeAngka
 @onready var heavy_angka: Label = $ContentPanel/Pages/NPCCountPanel/HeavyAngka
 
+# WEAPON BUTTONS
+@onready var knife_button: TextureButton = $ContentPanel/Pages/WeaponPanel/Knife
+@onready var club_button: TextureButton = $ContentPanel/Pages/WeaponPanel/Club
+@onready var cleaver_button: TextureButton = $ContentPanel/Pages/WeaponPanel/Clever
+
+# ARMOR BUTTONS
+@onready var street_button: TextureButton = $ContentPanel/Pages/ArmorPanel/Street
+@onready var leather_button: TextureButton = $ContentPanel/Pages/ArmorPanel/Leather
+@onready var reinforced_button: TextureButton = $ContentPanel/Pages/ArmorPanel/Reinforced
+
+# ALGORITHM BUTTONS
+@onready var hill_button: TextureButton = $ContentPanel/Pages/AlgorithmPanel/HillClimbing
+@onready var restart_button: TextureButton = $ContentPanel/Pages/AlgorithmPanel/RandomRestart
+@onready var annealing_button: TextureButton = $ContentPanel/Pages/AlgorithmPanel/SimulatedAnnealing
+
+# SELECTED TEXTURES - WEAPON
+@export var knife_selected: Texture2D
+@export var club_selected: Texture2D
+@export var cleaver_selected: Texture2D
+
+# SELECTED TEXTURES - ARMOR
+@export var street_selected: Texture2D
+@export var leather_selected: Texture2D
+@export var reinforced_selected: Texture2D
+
+# SELECTED TEXTURES - ALGORITHM
+@export var hill_selected: Texture2D
+@export var restart_selected: Texture2D
+@export var annealing_selected: Texture2D
+
+# Menyimpan tekstur Normal dan Hover asli
+var original_textures: Dictionary = {}
 
 # INISIALISASI MENU
 func _ready() -> void:
 	show_page("NPCCountPanel")
 	update_npc_display()
+	setup_selection_buttons()
 
 
 func show_page(page_name: String) -> void:
@@ -170,23 +203,26 @@ func _on_clever_pressed() -> void:
 
 func select_weapon(weapon_name: String) -> void:
 	selected_weapon = weapon_name
+	update_weapon_display()
 	print("Weapon dipilih: ", selected_weapon)
 
 
 # PILIHAN ARMOR
-func _on_street_clothes_pressed() -> void:
+func _on_street_pressed() -> void:
 	select_armor("Street Clothes")
 
-func _on_leather_vest_pressed() -> void:
+func _on_leather_pressed() -> void:
 	select_armor("Leather Vest")
 
-func _on_reinforced_coat_pressed() -> void:
+func _on_reinforced_pressed() -> void:
 	select_armor("Reinforced Coat")
 
 
 func select_armor(armor_name: String) -> void:
+	print("TOMBOL ARMOR DIKLIK: ", armor_name)
 	selected_armor = armor_name
-	print("Armor dipilih: ", selected_armor)
+	update_armor_display()
+	print("ARMOR TERPILIH: ", selected_armor)
 
 
 # PILIHAN ALGORITMA LOCAL SEARCH
@@ -202,6 +238,7 @@ func _on_simulated_annealing_pressed() -> void:
 
 func select_algorithm(algorithm_name: String) -> void:
 	selected_algorithm = algorithm_name
+	update_algorithm_display()
 	print("Algoritma dipilih: ", selected_algorithm)
 
 
@@ -299,3 +336,90 @@ func run_optimization() -> void:
 
 func _on_optimasi_button_pressed() -> void:
 	run_optimization()
+	
+	
+func setup_selection_buttons() -> void:
+	var all_buttons = [
+		knife_button, club_button, cleaver_button,
+		street_button, leather_button, reinforced_button,
+		hill_button, restart_button, annealing_button
+	]
+
+	for button in all_buttons:
+		original_textures[button] = {
+			"normal": button.texture_normal,
+			"hover": button.texture_hover
+		}
+
+	update_weapon_display()
+	update_armor_display()
+	update_algorithm_display()
+
+
+func apply_selected(
+	buttons: Array,
+	selected_button: TextureButton,
+	selected_texture: Texture2D
+) -> void:
+	for button in buttons:
+		button.texture_normal = original_textures[button]["normal"]
+		button.texture_hover = original_textures[button]["hover"]
+
+	selected_button.texture_normal = selected_texture
+	selected_button.texture_hover = selected_texture
+
+
+func update_weapon_display() -> void:
+	var buttons = [knife_button, club_button, cleaver_button]
+	var selected_button: TextureButton
+	var selected_texture: Texture2D
+
+	match selected_weapon:
+		"Knife":
+			selected_button = knife_button
+			selected_texture = knife_selected
+		"Club":
+			selected_button = club_button
+			selected_texture = club_selected
+		"Cleaver":
+			selected_button = cleaver_button
+			selected_texture = cleaver_selected
+
+	apply_selected(buttons, selected_button, selected_texture)
+
+
+func update_armor_display() -> void:
+	var buttons = [street_button, leather_button, reinforced_button]
+	var selected_button: TextureButton
+	var selected_texture: Texture2D
+
+	match selected_armor:
+		"Street Clothes":
+			selected_button = street_button
+			selected_texture = street_selected
+		"Leather Vest":
+			selected_button = leather_button
+			selected_texture = leather_selected
+		"Reinforced Coat":
+			selected_button = reinforced_button
+			selected_texture = reinforced_selected
+
+	apply_selected(buttons, selected_button, selected_texture)
+
+func update_algorithm_display() -> void:
+	var buttons = [hill_button, restart_button, annealing_button]
+	var selected_button: TextureButton
+	var selected_texture: Texture2D
+
+	match selected_algorithm:
+		"HillClimbing":
+			selected_button = hill_button
+			selected_texture = hill_selected
+		"RandomRestart":
+			selected_button = restart_button
+			selected_texture = restart_selected
+		"SimulatedAnnealing":
+			selected_button = annealing_button
+			selected_texture = annealing_selected
+
+	apply_selected(buttons, selected_button, selected_texture)

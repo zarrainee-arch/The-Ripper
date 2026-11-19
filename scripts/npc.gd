@@ -26,82 +26,68 @@ var heuristic
 
 
 # CURRENT PATH
-
 var current_path: Array[Vector2i] = []
-
 var expanded_nodes: Array[Vector2i] = []
-
 var path_index: int = 0
 
-
 # REPLANNING
-
 var replan_timer: float = 0.0
-
 var last_player_cell: Vector2i = Vector2i(-999, -999)
 
-
 # STATUS
-
 var path_status: String = "INITIALIZING"
 
-
 # CUMULATIVE STATISTICS
-#
 # INI TIDAK DI-RESET SETIAP REPLAN
-
 # Total semua node yang diexpand dari awal
 # NPC mulai mengejar sampai sekarang.
 var total_expanded_nodes: int = 0
 
-
 # Total node path yang BENAR-BENAR sudah dilewati NPC.
 var total_path_nodes: int = 0
-
 
 # Total biaya gerakan aktual NPC.
 # Karena setiap gerakan antar-cell = 1,
 # setiap cell yang dilewati menambah 1.
 var total_path_cost: float = 0.0
 
-
 # Berapa kali pathfinding dijalankan.
 var total_replans: int = 0
 
-
 # STATISTIK SEARCH TERAKHIR
-#
 # Ini hanya untuk informasi tambahan.
 
 var last_search_cost: float = INF
-
 var last_search_expanded: int = 0
-
 var last_search_path_nodes: int = 0
-
 var last_start_cell: Vector2i = Vector2i(-1, -1)
-
 var last_goal_cell: Vector2i = Vector2i(-1, -1)
 
+func apply_selected_pathfinding() -> void:
+	match Global.selected_pathfinding:
+		"ucs":
+			pathfinding_mode = PathfindingMode.UCS
+
+		"astar_manhattan":
+			pathfinding_mode = PathfindingMode.ASTAR_MANHATTAN
+
+		"astar_euclidean":
+			pathfinding_mode = PathfindingMode.ASTAR_EUCLIDEAN
+
+		_:
+			print("Pilihan menu belum tersedia, menggunakan Inspector: ", get_mode_name())
+
+	print("ALGORITHM SELECTED: ", get_mode_name())
 
 # READY
-
 func _ready():
-
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
-
-
+	apply_selected_pathfinding()
 	grid = get_parent().get_node("Grid")
-
 	player = get_parent().get_node("Player")
-
-
 	ucs = UCS.new(grid)
-
 	astar = AStarSearch.new()
-
 	heuristic = Heuristic.new()
-
 
 	print("")
 	print("================================")
@@ -122,18 +108,12 @@ func _ready():
 
 
 # PHYSICS
-
 func _physics_process(delta):
-
 	if grid == null or player == null:
-
 		velocity = Vector2.ZERO
-
 		return
 
-
 	replan_timer -= delta
-
 
 	var player_cell = grid.world_to_cell(
 		player.global_position
@@ -145,11 +125,8 @@ func _physics_process(delta):
 	# =====================================================
 
 	if player_cell != last_player_cell:
-
 		last_player_cell = player_cell
-
 		replan_timer = REPLAN_INTERVAL
-
 		update_path()
 
 
@@ -163,7 +140,6 @@ func _physics_process(delta):
 	):
 
 		replan_timer = REPLAN_INTERVAL
-
 		update_path()
 
 
@@ -172,13 +148,9 @@ func _physics_process(delta):
 
 
 # UPDATE PATH
-
 func update_path():
-
 	total_replans += 1
-
 	replan_timer = REPLAN_INTERVAL
-
 
 	var start = grid.world_to_cell(
 		global_position
@@ -191,11 +163,8 @@ func update_path():
 
 	print("")
 	print("========== NEW PATH SEARCH ==========")
-
 	print("Algorithm : ", get_mode_name())
-
 	print("Start     : ", start)
-
 	print("Goal      : ", goal)
 
 
@@ -204,28 +173,19 @@ func update_path():
 	# =====================================================
 
 	if not grid.is_inside_grid(start):
-
 		path_status = "START OUTSIDE GRID"
-
 		current_path.clear()
-
 		velocity = Vector2.ZERO
-
 		return
 
 
 	# =====================================================
 	# CEK GOAL
 	# =====================================================
-
 	if not grid.is_inside_grid(goal):
-
 		path_status = "GOAL OUTSIDE GRID"
-
 		current_path.clear()
-
 		velocity = Vector2.ZERO
-
 		return
 
 
@@ -235,20 +195,12 @@ func update_path():
 
 	var search_start = start
 
-
 	if not grid.is_walkable(search_start):
-
 		search_start = find_nearest_walkable(start)
-
-
 		if search_start == Vector2i(-999, -999):
-
 			path_status = "NO WALKABLE START"
-
 			current_path.clear()
-
 			velocity = Vector2.ZERO
-
 			return
 
 
@@ -257,15 +209,10 @@ func update_path():
 	# =====================================================
 
 	if not grid.is_walkable(goal):
-
 		path_status = "PLAYER ON OBSTACLE"
-
 		current_path.clear()
-
 		velocity = Vector2.ZERO
-
 		# JANGAN RESET STATISTIK KUMULATIF
-
 		return
 
 
@@ -274,14 +221,9 @@ func update_path():
 	# =====================================================
 
 	var result: Dictionary = {}
-
-
 	match pathfinding_mode:
-
 		PathfindingMode.UCS:
-
 			print("RUNNING UCS...")
-
 			result = ucs.find_path(
 				search_start,
 				goal
@@ -289,123 +231,87 @@ func update_path():
 
 
 		PathfindingMode.ASTAR_MANHATTAN:
-
 			print("RUNNING A* MANHATTAN...")
-
 			heuristic.heuristic_type = "Manhattan"
-
 			result = astar.find_path(
 				grid,
 				search_start,
 				goal,
 				heuristic
 			)
-
 
 		PathfindingMode.ASTAR_EUCLIDEAN:
-
 			print("RUNNING A* EUCLIDEAN...")
-
 			heuristic.heuristic_type = "Euclidean"
-
 			result = astar.find_path(
 				grid,
 				search_start,
 				goal,
 				heuristic
 			)
-
 
 	# =====================================================
 	# HASIL SEARCH
 	# =====================================================
-
 	if result.is_empty():
-
 		path_status = "NO RESULT"
-
 		current_path.clear()
-
 		velocity = Vector2.ZERO
-
 		return
-
 
 	var new_path = result.get(
 		"path",
 		[]
 	)
 
-
 	var new_cost = result.get(
 		"cost",
 		INF
 	)
-
 
 	var new_expanded_nodes = result.get(
 		"expanded_nodes",
 		[]
 	)
 
-
 	var new_expanded_count = result.get(
 		"expanded_count",
 		new_expanded_nodes.size()
 	)
-
 
 	# =====================================================
 	# PATH GAGAL
 	# =====================================================
 
 	if new_path.is_empty():
-
 		print("NO PATH FOUND")
-
 		path_status = "NO PATH"
-
 		current_path.clear()
-
 		velocity = Vector2.ZERO
-
 		# Statistik cumulative TIDAK DIUBAH.
-
 		return
 
 
 	# =====================================================
 	# SEARCH BERHASIL
 	# =====================================================
-
 	current_path.clear()
-
 	for cell in new_path:
-
 		current_path.append(cell)
-
-
+		
 	expanded_nodes.clear()
-
 	for cell in new_expanded_nodes:
-
 		expanded_nodes.append(cell)
-
 
 	# =====================================================
 	# SIMPAN STATISTIK SEARCH TERAKHIR
 	# =====================================================
 
 	last_search_cost = float(new_cost)
-
 	last_search_expanded = int(new_expanded_count)
-
 	last_search_path_nodes = current_path.size()
-
 	last_start_cell = search_start
-
 	last_goal_cell = goal
-
 
 	# =====================================================
 	# TAMBAHKAN EXPANDED NODE KE TOTAL
@@ -415,66 +321,47 @@ func update_path():
 
 	total_expanded_nodes += new_expanded_count
 
-
 	# =====================================================
 	# STATUS
 	# =====================================================
 
 	path_status = "CHASING"
 
-
 	# =====================================================
 	# CARI NODE PATH TERDEKAT
 	# =====================================================
 
 	path_index = 0
-
 	var closest_distance = INF
 
-
 	for i in range(current_path.size()):
-
 		var point = grid.cell_to_world(
 			current_path[i]
 		)
-
 
 		var distance = global_position.distance_to(
 			point
 		)
 
-
 		if distance < closest_distance:
-
 			closest_distance = distance
-
 			path_index = i
-
 
 	# Jangan kembali ke node yang sudah dilewati
 	if path_index < current_path.size() - 1:
-
 		path_index += 1
-
 
 	print("")
 	print("========== PATH FOUND ==========")
-
 	print("Search Cost      : ", last_search_cost)
-
 	print("Search Expanded  : ", last_search_expanded)
-
 	print("TOTAL Expanded   : ", total_expanded_nodes)
-
 	print("Current Path     : ", current_path)
-
 	print("================================")
 
 
 # FOLLOW PATH
-
 func follow_path():
-
 	if current_path.is_empty():
 
 		velocity = Vector2.ZERO

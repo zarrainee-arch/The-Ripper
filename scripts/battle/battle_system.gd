@@ -27,8 +27,13 @@ var enemy_nodes: Array = []
 var battle_running := false
 var next_enemy_start := 0
 
+# NPC yang sedang dipilih Player
+var selected_target_index := -1
+
 
 func _ready() -> void:
+	get_viewport().physics_object_picking = true
+
 	battle_ai = BattleAI.new("minimax", 3)
 
 	var evaluation_script = preload("res://scripts/battle_evaluation.gd")
@@ -76,8 +81,29 @@ func start_battle(_enemy_count: int = -1) -> void:
 	ai_thinking = false
 	next_enemy_start = 0
 
+	# Pilih NPC hidup pertama sebagai target awal.
+	selected_target_index = get_first_living_enemy()
+
+	# Aktifkan deteksi klik melalui TargetArea.
+	for enemy in enemy_nodes:
+		var target_area = enemy.get_node_or_null("TargetArea") as Area2D
+
+		if target_area == null:
+			push_warning("TargetArea tidak ditemukan pada " + enemy.name)
+			continue
+
+		target_area.collision_layer = 1
+		target_area.input_pickable = true
+
+		if not target_area.has_meta("battle_click_connected"):
+			target_area.input_event.connect(
+				_on_target_area_input_event.bind(enemy)
+			)
+			target_area.set_meta("battle_click_connected", true)
+
 	if player_idle:
 		player_idle.visible = true
+
 	if player_battle:
 		player_battle.visible = false
 
@@ -87,10 +113,12 @@ func start_battle(_enemy_count: int = -1) -> void:
 
 		if idle:
 			idle.visible = true
+
 		if battle:
 			battle.visible = false
 
 	var ui = get_parent().get_node_or_null("BattleUI")
+
 	if ui:
 		ui.show_battle()
 
@@ -125,9 +153,43 @@ func get_living_enemy_count() -> int:
 	return count
 
 
+# Mendeteksi klik pada TargetArea NPC.
+func _on_target_area_input_event(
+	_viewport: Node,
+	event: InputEvent,
+	_shape_idx: int,
+	enemy: CharacterBody2D
+) -> void:
+
+	if not battle_running or state == null:
+		return
+
+	if state.current_turn != "PLAYER" or ai_thinking:
+		return
+
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+
+			var index = enemy_nodes.find(enemy)
+
+			if index < 0:
+				return
+
+			if index >= state.npc_hps.size():
+				return
+
+			if state.npc_hps[index] <= 0:
+				return
+
+			selected_target_index = index
+
+			print("TARGET SELECTED: ", enemy.name)
+
+
 func execute_action(action: Action, actor: String) -> void:
 	if not battle_running or state == null or state.is_terminal():
 		return
+
 	if actor != state.current_turn or actor != "PLAYER":
 		return
 
@@ -142,6 +204,7 @@ func execute_action(action: Action, actor: String) -> void:
 		Action.POTION:
 			if state.player_potions <= 0:
 				return
+
 			if state.player_hp >= MAX_HP:
 				return
 
@@ -149,6 +212,7 @@ func execute_action(action: Action, actor: String) -> void:
 				MAX_HP,
 				state.player_hp + POTION_HEAL
 			)
+
 			state.player_potions -= 1
 			print("PLAYER uses potion. HP: ", state.player_hp)
 
@@ -166,18 +230,29 @@ func execute_action(action: Action, actor: String) -> void:
 	call_deferred("_run_npc_turn")
 
 
+# Player menyerang NPC yang dipilih.
 func attack_player() -> void:
-	var target := get_first_living_enemy()
+	var target := selected_target_index
+
+	if target < 0 or target >= state.npc_hps.size():
+		target = get_first_living_enemy()
 
 	if target < 0:
 		return
 
-	# Animasi serangan pemain.
+	if state.npc_hps[target] <= 0:
+		target = get_first_living_enemy()
+
+	if target < 0:
+		return
+
 	await play_player_attack_animation()
 
 	if not battle_running or state == null:
 		return
+
 	if state.npc_hps[target] <= 0:
+		selected_target_index = get_first_living_enemy()
 		return
 
 	var damage := ATTACK_DAMAGE
@@ -200,10 +275,20 @@ func attack_player() -> void:
 		state.npc_hps[target]
 	)
 
+	# Jika target mati, pindah ke NPC hidup berikutnya.
+	if state.npc_hps[target] <= 0:
+		selected_target_index = get_first_living_enemy()
+
+		print(
+			"TARGET DEFEATED. NEW TARGET: ",
+			selected_target_index
+		)
+
 
 func _run_npc_turn() -> void:
 	if not battle_running or state == null:
 		return
+
 	if state.current_turn != "NPC" or ai_thinking:
 		return
 
@@ -216,7 +301,7 @@ func _run_npc_turn() -> void:
 		ai_thinking = false
 		return
 
-	# Tetap jalankan evaluasi kedua algoritma untuk eksperimen AI.
+	# Evaluasi kedua algoritma untuk eksperimen AI.
 	last_minimax_result = BattleAI.new(
 		"minimax", 3
 	).get_best_action(state, evaluation)
@@ -235,18 +320,20 @@ func _run_npc_turn() -> void:
 	var checked := 0
 	var total_enemies := enemy_nodes.size()
 
-	# Rotasi urutan penyerang agar NPC belakang tidak selalu dilewati.
+	# Rotasi urutan penyerang.
 	while checked < total_enemies and attackers < attack_limit:
 		if not battle_running or state == null:
 			break
+
 		if state.player_hp <= 0:
 			break
 
-		var index := (next_enemy_start + checked) % total_enemies
+		var index = (next_enemy_start + checked) % total_enemies
 		checked += 1
 
 		if index >= state.npc_hps.size():
 			continue
+
 		if state.npc_hps[index] <= 0:
 			continue
 
@@ -254,8 +341,10 @@ func _run_npc_turn() -> void:
 
 		if not battle_running or state == null:
 			break
+
 		if state.player_hp <= 0:
 			break
+
 		if state.npc_hps[index] <= 0:
 			continue
 
@@ -282,6 +371,7 @@ func _run_npc_turn() -> void:
 func attack_enemy(index: int) -> void:
 	if index < 0 or index >= enemy_nodes.size():
 		return
+
 	if index >= state.npc_hps.size() or state.npc_hps[index] <= 0:
 		return
 
@@ -394,6 +484,7 @@ func finish_battle() -> void:
 
 func update_battle_ui() -> void:
 	var ui = get_parent().get_node_or_null("BattleUI")
+
 	if ui:
 		ui.update_ui()
 
@@ -401,6 +492,7 @@ func update_battle_ui() -> void:
 func _input(event: InputEvent) -> void:
 	if not battle_running or state == null:
 		return
+
 	if state.current_turn != "PLAYER" or state.is_terminal():
 		return
 
@@ -408,7 +500,9 @@ func _input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_A:
 				execute_action(Action.ATTACK, "PLAYER")
+
 			KEY_D:
 				execute_action(Action.DEFEND, "PLAYER")
+
 			KEY_P:
 				execute_action(Action.POTION, "PLAYER")

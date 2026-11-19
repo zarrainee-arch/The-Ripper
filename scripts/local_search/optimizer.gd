@@ -80,8 +80,6 @@ func run(initial_configuration, target_difficulty: float, algorithm_name: String
 	# Menghitung fitness konfigurasi awal satu kali.
 	var initial_fitness: float = evaluate_fitness(initial_copy, target_difficulty)
 
-	print("Difficulty awal: ", _problem.calculate_difficulty(initial_copy))
-	print("Target difficulty: ", target_difficulty)
 	# Menghentikan pencarian jika konfigurasi awal sudah memenuhi target.
 	if is_goal(initial_copy, target_difficulty):
 		return _build_result(initial_copy, initial_fitness, 0, algorithm_name, initial_copy, target_difficulty, 0, start_time, actual_seed, OptimizationResult.REASON_GOAL_REACHED, effective_params)

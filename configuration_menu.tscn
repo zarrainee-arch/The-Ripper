@@ -3,8 +3,10 @@
 [ext_resource type="Script" uid="uid://cx68hi8dv222a" path="res://configuration_menu.gd" id="1_7rktx"]
 [ext_resource type="Texture2D" uid="uid://bnfutlwuklam2" path="res://Assets The Ripper/configuration_menu/base_menu.png" id="1_sps0e"]
 [ext_resource type="Texture2D" uid="uid://b87svqdfcvgnd" path="res://Assets The Ripper/configuration_menu/npcComposition_normal.png" id="2_er5qw"]
+[ext_resource type="Texture2D" uid="uid://dobqj1463iq55" path="res://Assets The Ripper/configuration_menu/club_selected_resized.png" id="3_6liis"]
 [ext_resource type="Texture2D" uid="uid://f1hdkj2bwqdv" path="res://Assets The Ripper/configuration_menu/npcComposition_hover.png" id="3_52cvh"]
 [ext_resource type="Texture2D" uid="uid://fbaa4ynq6dv1" path="res://Assets The Ripper/configuration_menu/weapon_normal.png" id="4_c7c0y"]
+[ext_resource type="Texture2D" uid="uid://d16l4vne0ckyb" path="res://Assets The Ripper/configuration_menu/cleaver_selected_resized.png" id="4_e6adh"]
 [ext_resource type="Texture2D" uid="uid://cib3ljd4jklmw" path="res://Assets The Ripper/configuration_menu/weapon_hover.png" id="5_uunuf"]
 [ext_resource type="Texture2D" uid="uid://cpx3s017et1wt" path="res://Assets The Ripper/configuration_menu/armor_normal.png" id="6_sd505"]
 [ext_resource type="Texture2D" uid="uid://bxtfdce7bwkmm" path="res://Assets The Ripper/configuration_menu/armor_hover.png" id="7_fiqyg"]
@@ -72,6 +74,15 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_7rktx")
+knife_selected = ExtResource("18_c6a8d")
+club_selected = ExtResource("3_6liis")
+cleaver_selected = ExtResource("4_e6adh")
+street_selected = ExtResource("25_nayap")
+leather_selected = ExtResource("27_qexge")
+reinforced_selected = ExtResource("29_kkmsb")
+hill_selected = ExtResource("32_rclux")
+restart_selected = ExtResource("34_psguu")
+annealing_selected = ExtResource("36_curdg")
 
 [node name="menubase" type="TextureRect" parent="." unique_id=356135866]
 layout_mode = 1
@@ -315,6 +326,7 @@ offset_bottom = 751.0
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("17_f6qj6")
 texture_hover = ExtResource("18_c6a8d")
+ignore_texture_size = true
 
 [node name="Club" type="TextureButton" parent="ContentPanel/Pages/WeaponPanel" unique_id=407921086]
 layout_mode = 0
@@ -325,6 +337,7 @@ offset_bottom = 754.0
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("19_r1iun")
 texture_hover = ExtResource("20_rth3d")
+ignore_texture_size = true
 
 [node name="Clever" type="TextureButton" parent="ContentPanel/Pages/WeaponPanel" unique_id=123263212]
 layout_mode = 0
@@ -335,6 +348,7 @@ offset_bottom = 770.0
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("21_q8qsv")
 texture_hover = ExtResource("22_2pl24")
+ignore_texture_size = true
 
 [node name="ArmorPanel" type="Control" parent="ContentPanel/Pages" unique_id=341461890]
 visible = false
@@ -382,6 +396,7 @@ texture_normal = ExtResource("28_jd38l")
 texture_hover = ExtResource("29_kkmsb")
 
 [node name="SeedPanel" type="Control" parent="ContentPanel/Pages" unique_id=537744060]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -479,6 +494,7 @@ texture_hover = ExtResource("39_fycs6")
 [connection signal="pressed" from="ContentPanel/Pages/WeaponPanel/Clever" to="." method="_on_clever_pressed"]
 [connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Street" to="." method="_on_street_pressed"]
 [connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Leather" to="." method="_on_leather_pressed"]
+[connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Leather" to="." method="_on_leather_vest_pressed"]
 [connection signal="pressed" from="ContentPanel/Pages/ArmorPanel/Reinforced" to="." method="_on_reinforced_pressed"]
 [connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/HillClimbing" to="." method="_on_hill_climbing_pressed"]
 [connection signal="pressed" from="ContentPanel/Pages/AlgorithmPanel/RandomRestart" to="." method="_on_random_restart_pressed"]

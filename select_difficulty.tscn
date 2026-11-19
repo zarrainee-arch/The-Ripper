@@ -2,11 +2,17 @@
 
 [ext_resource type="Texture2D" uid="uid://cilds3xb47yfs" path="res://Assets The Ripper/selectMenu/panel.png" id="1_efpx5"]
 [ext_resource type="Script" uid="uid://bx5y8aojhrpjc" path="res://select_difficulty.gd" id="1_sjyrp"]
-[ext_resource type="Texture2D" uid="uid://cagqk8nu420fe" path="res://Assets The Ripper/selectMenu/easyButton.png" id="2_bxvsn"]
-[ext_resource type="Texture2D" uid="uid://b03nh436nnfys" path="res://Assets The Ripper/selectMenu/mediumButton.png" id="3_0i50u"]
-[ext_resource type="Texture2D" uid="uid://bucvaegfui27q" path="res://Assets The Ripper/selectMenu/hardButton.png" id="4_dpmtu"]
+[ext_resource type="Texture2D" uid="uid://brq8bhp6nvfox" path="res://Assets The Ripper/selectMenu/easy_selected.png" id="2_r063b"]
+[ext_resource type="Texture2D" uid="uid://pjn6etqa51" path="res://Assets The Ripper/selectMenu/medium_selected.png" id="3_2wi20"]
+[ext_resource type="Texture2D" uid="uid://ba27fkud7gsd8" path="res://Assets The Ripper/selectMenu/easy.png" id="3_udk4s"]
+[ext_resource type="Texture2D" uid="uid://cfixwmgg56lg6" path="res://Assets The Ripper/selectMenu/hard_selected.png" id="4_foo4o"]
+[ext_resource type="Texture2D" uid="uid://cviru7rdkk4ea" path="res://Assets The Ripper/selectMenu/easy_hover.png" id="4_l6vo8"]
 [ext_resource type="Texture2D" uid="uid://oebi1udi2ljh" path="res://Assets The Ripper/selectMenu/backButton.png" id="5_dpmtu"]
+[ext_resource type="Texture2D" uid="uid://dpehbpyt15p25" path="res://Assets The Ripper/selectMenu/medium.png" id="5_k7igd"]
+[ext_resource type="Texture2D" uid="uid://cblqg8t3ci17g" path="res://Assets The Ripper/selectMenu/medium_hover.png" id="6_gjelm"]
 [ext_resource type="Texture2D" uid="uid://b3vaqc606rmhm" path="res://Assets The Ripper/selectMenu/hoverBack.png" id="7_4na3v"]
+[ext_resource type="Texture2D" uid="uid://gkrxq60un71a" path="res://Assets The Ripper/selectMenu/hard.png" id="7_r063b"]
+[ext_resource type="Texture2D" uid="uid://cj5l1tdnxcng8" path="res://Assets The Ripper/selectMenu/hard_hover.png" id="8_2wi20"]
 
 [node name="Control" type="Control" unique_id=2006575099]
 layout_mode = 3
@@ -16,6 +22,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sjyrp")
+easy_selected = ExtResource("2_r063b")
+medium_selected = ExtResource("3_2wi20")
+difficult_selected = ExtResource("4_foo4o")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1577106016]
 layout_mode = 1
@@ -29,31 +38,33 @@ expand_mode = 1
 
 [node name="easyButton" type="TextureButton" parent="." unique_id=1458756003]
 layout_mode = 0
-offset_left = 426.0
-offset_top = 237.99997
-offset_right = 2598.0
-offset_bottom = 962.0
-rotation = 3.1415927
-scale = Vector2(-0.2, -0.2)
-texture_normal = ExtResource("2_bxvsn")
+offset_left = 454.0
+offset_top = 263.0
+offset_right = 1059.7142
+offset_bottom = 437.2857
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("3_udk4s")
+texture_hover = ExtResource("4_l6vo8")
 
 [node name="mediumButton" type="TextureButton" parent="." unique_id=1940875866]
 layout_mode = 0
-offset_left = 426.00003
-offset_top = 338.0
-offset_right = 2598.0
-offset_bottom = 1062.0
-scale = Vector2(0.2, 0.2)
-texture_normal = ExtResource("3_0i50u")
+offset_left = 240.00003
+offset_top = 382.0
+offset_right = 869.99976
+offset_bottom = 537.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("5_k7igd")
+texture_hover = ExtResource("6_gjelm")
 
 [node name="difficultButton" type="TextureButton" parent="." unique_id=775317180]
 layout_mode = 0
-offset_left = 428.0
-offset_top = 437.0
-offset_right = 2600.0
-offset_bottom = 1161.0
-scale = Vector2(0.2, 0.2)
-texture_normal = ExtResource("4_dpmtu")
+offset_left = 689.0
+offset_top = 380.00003
+offset_right = 1292.0
+offset_bottom = 529.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("7_r063b")
+texture_hover = ExtResource("8_2wi20")
 
 [node name="backButton" type="TextureButton" parent="." unique_id=827006992]
 layout_mode = 0
