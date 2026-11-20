@@ -1,11 +1,12 @@
 extends RefCounted
-class_name MDPSolver
+
+const DECISION_MODEL = preload("res://scripts/decision_model.gd")
 
 # Batas probabilitas dan toleransi perhitungan.
 const PROBABILITY_MIN: float = 0.0
 const PROBABILITY_MAX: float = 1.0
 const PROBABILITY_TOLERANCE: float = 0.000001
-const COMPARISON_TOLERANCE: float = 0.000001
+const COMPARISON_TOLERANCE: float = 0.000000001
 
 # Parameter default Value Iteration.
 const VALUE_ITERATION_EPSILON: float = 0.001
@@ -85,7 +86,7 @@ static func _validate_model_config(model: Variant) -> Dictionary:
 		return _result(false, ["INVALID_MODEL"])
 
 	# Menggunakan validasi DecisionModel agar aturan tidak diduplikasi.
-	var created: Dictionary = DecisionModel.create_model(config)
+	var created: Dictionary = DECISION_MODEL.create_model(config)
 
 	# Meneruskan error apabila pembuatan model gagal.
 	if not created is Dictionary or not created.get("valid", false):
@@ -187,7 +188,7 @@ static func _prepare_model(model: Variant, provider: Variant, probability_tolera
 		return gamma_check
 
 	# Memeriksa kecocokan metadata provider dan seluruh transisi.
-	var provider_check: Dictionary = DecisionModel.validate_model(normalized_model, provider, probability_tolerance)
+	var provider_check: Dictionary = DECISION_MODEL.validate_model(normalized_model, provider, probability_tolerance)
 
 	# Menolak jika hasil validasi provider bukan Dictionary.
 	if not provider_check is Dictionary:
@@ -271,7 +272,7 @@ static func _get_transitions(provider: Variant, state: String, action: String) -
 	)
 
 # Memvalidasi setiap cabang transisi sebelum digunakan.
-static func _validate_transition_list(transitions: Variant, state_ids: Array,probability_tolerance: float) -> Dictionary:
+static func _validate_transition_list(transitions: Variant, state_ids: Array, probability_tolerance: float) -> Dictionary:
 	# Memastikan daftar transisi berbentuk Array dan tidak kosong.
 	if not transitions is Array or transitions.is_empty():
 		return _result(false, ["INVALID_TRANSITION"])

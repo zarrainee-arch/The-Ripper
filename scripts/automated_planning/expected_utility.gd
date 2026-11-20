@@ -1,11 +1,10 @@
 extends RefCounted
-class_name ExpectedUtility
 
 # Batas probabilitas dan toleransi perhitungan.
 const PROBABILITY_MIN: float = 0.0
 const PROBABILITY_MAX: float = 1.0
 const PROBABILITY_TOLERANCE: float = 0.000001
-const COMPARISON_TOLERANCE: float = 0.000001
+const COMPARISON_TOLERANCE: float = 0.000000001
 
 # Membuat format Result yang digunakan oleh modul Stage 4.
 static func _result(valid: bool, errors: Array[String] = [], data: Dictionary = {}) -> Dictionary:
@@ -175,7 +174,7 @@ static func expected_utility(outcomes: Variant, probability_tolerance: float = P
 
 # Mengurutkan aksi berdasarkan Expected Utility tertinggi.
 # Jika nilainya sama persis, action ID digunakan sebagai tie-break.
-static func _sort_by_value(first: Dictionary,second: Dictionary) -> bool:
+static func _sort_by_value(first: Dictionary, second: Dictionary) -> bool:
 	# Mengambil nilai Expected Utility kedua aksi untuk dibandingkan.
 	var first_value: float = float(first["expected_utility"])
 	var second_value: float = float(second["expected_utility"])

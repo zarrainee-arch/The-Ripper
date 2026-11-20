@@ -1,5 +1,4 @@
 extends RefCounted
-class_name DecisionModel
 
 # Mengatur batas nilai probabilitas yang dapat diterima.
 const PROBABILITY_MIN := 0.0
@@ -178,6 +177,21 @@ static func _validate_config(config: Variant) -> Array[String]:
 		errors.append("INVALID_MODEL")
 		return errors
 
+	# Memastikan jumlah pemetaan action sesuai dengan jumlah state.
+	if actions_by_state.size() != state_ids.size():
+		errors.append("INVALID_MODEL")
+		return errors
+
+	# Memastikan terminal_classes hanya berisi terminal state yang terdaftar.
+	if terminal_classes.size() != terminal_states.size():
+		errors.append("INVALID_MODEL")
+		return errors
+
+	# Memastikan reward_by_state hanya berisi state yang terdaftar.
+	if reward_by_state.size() != state_ids.size():
+		errors.append("INVALID_MODEL")
+		return errors
+
 	# Memastikan setiap initial state terdaftar dalam state_ids.
 	for state in initial_states:
 		if not state_ids.has(state):
@@ -317,11 +331,15 @@ static func create_model(config: Variant) -> Dictionary:
 
 # Memeriksa nilai tolerance yang digunakan dalam validasi probabilitas.
 static func _validate_tolerance(tolerance: Variant) -> bool:
-	# Memastikan tolerance berupa angka finite dan tidak bernilai negatif.
-	return _is_finite_number(tolerance) and float(tolerance) >= 0.0
+	# Memastikan tolerance berupa angka finite dan berada dalam rentang valid.
+	return (
+		_is_finite_number(tolerance)
+		and float(tolerance) >= 0.0
+		and float(tolerance) < 1.0
+	)
 
 # Memeriksa struktur transisi dan memastikan total probabilitasnya sesuai.
-static func _validate_transitions(transitions: Variant, state_ids: Array,tolerance: float) -> Array[String]:
+static func _validate_transitions(transitions: Variant, state_ids: Array, tolerance: float) -> Array[String]:
 	# Menampung daftar kode error yang ditemukan selama pemeriksaan transisi.
 	var errors: Array[String] = []
 
@@ -376,6 +394,11 @@ static func _validate_transitions(transitions: Variant, state_ids: Array,toleran
 
 		# Menjumlahkan probabilitas setiap cabang, termasuk tujuan yang sama.
 		total_probability += float(probability)
+
+		# Memastikan akumulasi probabilitas tidak overflow.
+		if not _is_finite_number(total_probability):
+			errors.append("INVALID_PROBABILITY_SUM")
+			return errors
 
 	# Total probabilitas seluruh cabang harus mendekati 1.
 	if abs(total_probability - 1.0) > tolerance:
@@ -505,14 +528,41 @@ static func validate_model(model: Variant, provider: Variant, probability_tolera
 					"status": "PROVIDER_ERROR"
 				})
 
-			# Menolak jika provider melaporkan kegagalan saat mengambil transisi.
-			if not transition_result["valid"]:
+			# Memastikan tipe data Result sesuai kontrak.
+			if (
+				not transition_result["valid"] is bool
+				or not transition_result["errors"] is Array
+				or not transition_result["data"] is Dictionary
+			):
 				return _result(false, ["PROVIDER_ERROR"], {
 					"status": "PROVIDER_ERROR"
 				})
 
+			# Memastikan setiap error dari provider berupa String.
+			for provider_error in transition_result["errors"]:
+				if not provider_error is String:
+					return _result(false, ["PROVIDER_ERROR"], {
+						"status": "PROVIDER_ERROR"
+					})
+
+			# Menolak jika provider melaporkan kegagalan saat mengambil transisi.
+			if not transition_result["valid"]:
+				var provider_errors: Array[String] = []
+
+				# Mempertahankan error asli dari provider untuk kebutuhan debugging.
+				for provider_error in transition_result["errors"]:
+					provider_errors.append(provider_error)
+
+				# Menggunakan PROVIDER_ERROR jika provider tidak memberikan detail error.
+				if provider_errors.is_empty():
+					provider_errors.append("PROVIDER_ERROR")
+
+				return _result(false, provider_errors, {
+					"status": "PROVIDER_ERROR"
+				})
+
 			# Memastikan hasil provider memiliki daftar transisi.
-			if not transition_result["data"] is Dictionary or not transition_result["data"].has("transitions"):
+			if not transition_result["data"].has("transitions"):
 				return _result(false, ["PROVIDER_ERROR"], {
 					"status": "PROVIDER_ERROR"
 				})
@@ -520,11 +570,7 @@ static func validate_model(model: Variant, provider: Variant, probability_tolera
 			var transitions: Variant = transition_result["data"]["transitions"]
 
 			# Memeriksa probabilitas dan state tujuan setiap cabang.
-			var transition_errors := _validate_transitions(
-				transitions,
-				state_ids,
-				probability_tolerance
-			)
+			var transition_errors := _validate_transitions(transitions, state_ids, probability_tolerance)
 
 			# Mengembalikan error jika ditemukan transisi yang tidak valid.
 			if not transition_errors.is_empty():
@@ -541,6 +587,10 @@ static func validate_model(model: Variant, provider: Variant, probability_tolera
 static func get_reward(model: Variant, state: Variant) -> Dictionary:
 	# Memastikan model memiliki pemetaan reward_by_state.
 	if not model is Dictionary or not model.has("reward_by_state"):
+		return _result(false, ["INVALID_MODEL"])
+
+	# Memastikan reward_by_state berbentuk Dictionary.
+	if not model["reward_by_state"] is Dictionary:
 		return _result(false, ["INVALID_MODEL"])
 
 	# Memastikan state tersedia dalam model.
@@ -587,20 +637,34 @@ static func get_actions(model: Variant, state: Variant) -> Dictionary:
 	if not model is Dictionary or not model.has("actions_by_state"):
 		return _result(false, ["INVALID_MODEL"])
 
+	# Memastikan actions_by_state berbentuk Dictionary.
+	if not model["actions_by_state"] is Dictionary:
+		return _result(false, ["INVALID_MODEL"])
+
 	# Memastikan state memiliki daftar action.
 	if not state is String or not model["actions_by_state"].has(state):
 		return _result(false, ["INVALID_STATE"])
 
+	var actions: Variant = model["actions_by_state"][state]
+
+	# Memastikan daftar action berbentuk Array.
+	if not actions is Array:
+		return _result(false, ["INVALID_MODEL"])
+
 	# Mengembalikan salinan daftar action milik state tersebut.
 	return _result(true, [], {
 		"state": state,
-		"actions": model["actions_by_state"][state].duplicate(true)
+		"actions": actions.duplicate(true)
 	})
 
 # Memeriksa apakah state yang diberikan termasuk terminal state.
 static func is_terminal(model: Variant, state: Variant) -> Dictionary:
 	# Memastikan model memiliki daftar state_ids dan terminal_states.
 	if not model is Dictionary or not model.has("state_ids") or not model.has("terminal_states"):
+		return _result(false, ["INVALID_MODEL"])
+
+	# Memastikan kedua atribut berbentuk Array.
+	if not model["state_ids"] is Array or not model["terminal_states"] is Array:
 		return _result(false, ["INVALID_MODEL"])
 
 	# Memastikan state terdaftar dalam model.
