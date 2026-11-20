@@ -5,6 +5,10 @@ const DOMAIN = preload("res://scripts/automated_planning/planning_domain.gd")
 const PLANNER = preload("res://scripts/automated_planning/planner.gd")
 const LOG_SCRIPT = preload("res://scripts/automated_planning/planning_log.gd")
 
+const DECISION_MODEL = preload("res://scripts/automated_planning/decision_model.gd")
+const EXPECTED_UTILITY = preload("res://scripts/automated_planning/expected_utility.gd")
+const MDP_SOLVER = preload("res://scripts/automated_planning/mdp_solver.gd")
+
 const MAX_REPLAN := 1
 const VALID_BATTLE_STATUS := ["executed", "rejected", "error"]
 
@@ -13,6 +17,25 @@ const REASON_REPLACED_BY_FALLBACK := "plan_replaced_by_fallback"
 const REASON_CANCELLED_BATTLE_ENDED := "plan_cancelled_battle_ended"
 const REASON_CANCELLED_NO_VALID_ACTION := "plan_cancelled_no_valid_action"
 const REASON_CANCELLED_SNAPSHOT_INVALID := "plan_cancelled_snapshot_invalid"
+
+# Konfigurasi Decision Making Under Uncertainty
+var uncertainty_model_config: Dictionary = {}
+var uncertainty_utility_map: Dictionary = {}
+
+# Provider untuk mengambil data dari komponen lain
+var uncertainty_belief_provider: Callable = Callable()
+var uncertainty_transition_provider: Callable = Callable()
+var uncertainty_meu_provider: Callable = Callable()
+
+# Hasil rekomendasi Decision Making Under Uncertainty
+var uncertainty_advisory: Dictionary = {}
+var uncertainty_is_configured: bool = false
+
+# Parameter perhitungan
+var uncertainty_probability_tolerance: float = 0.000001
+var uncertainty_comparison_tolerance: float = 0.000001
+var uncertainty_epsilon: float = 0.001
+var uncertainty_max_iterations: int = 1000
 
 # Mode default sesuai kontrak, yaitu UCS.
 var planner_mode: String = PLANNER.MODE_UCS
@@ -776,3 +799,262 @@ func _get_unresolved_alive() -> Array:
 			unresolved.append(npc_id)
 
 	return unresolved
+
+# Mengatur kebutuhan Decision Making Under Uncertainty
+func configure_uncertainty_advisory(model_config: Dictionary, utility_map: Dictionary, belief_provider: Callable, transition_provider: Callable, meu_provider: Callable) -> Dictionary:
+	# Menyalin konfigurasi model dan peta utility agar perubahan luar tidak memengaruhi state internal.
+	uncertainty_model_config = model_config.duplicate(true)
+	uncertainty_utility_map = utility_map.duplicate(true)
+
+	# Menyimpan referensi Callable dari seluruh provider yang dibutuhkan.
+	uncertainty_belief_provider = belief_provider
+	uncertainty_transition_provider = transition_provider
+	uncertainty_meu_provider = meu_provider
+
+	# Menandai bahwa modul advisory telah dikonfigurasi dan membersihkan cache rekomendasi lama.
+	uncertainty_is_configured = true
+	uncertainty_advisory.clear()
+
+	# Mengembalikan status konfirmasi bahwa konfigurasi berhasil disimpan.
+	return {
+		"valid": true,
+		"errors": [],
+		"data": {
+			"status": "CONFIGURED"
+		}
+	}
+
+# Memperbarui rekomendasi berdasarkan kondisi ketidakpastian terbaru
+func refresh_uncertainty_advisory() -> Dictionary:
+	# Memastikan konfigurasi awal sudah dilakukan sebelum menyegarkan rekomendasi.
+	if not uncertainty_is_configured:
+		return _uncertainty_error("UNCERTAINTY_NOT_CONFIGURED")
+
+	# Memastikan belief_provider masih aktif dan dapat dipanggil.
+	if not uncertainty_belief_provider.is_valid():
+		return _uncertainty_error("BELIEF_PROVIDER_UNAVAILABLE")
+
+	# Memastikan transition_provider masih aktif dan dapat dipanggil.
+	if not uncertainty_transition_provider.is_valid():
+		return _uncertainty_error("TRANSITION_PROVIDER_UNAVAILABLE")
+
+	# Memastikan meu_provider masih aktif dan dapat dipanggil.
+	if not uncertainty_meu_provider.is_valid():
+		return _uncertainty_error("MEU_PROVIDER_UNAVAILABLE")
+
+	# Mengambil belief terbaru dari provider.
+	var belief_result = uncertainty_belief_provider.call()
+
+	# Menghentikan proses jika pengambilan belief gagal atau formatnya tidak valid.
+	if not _uncertainty_result_is_valid(belief_result):
+		return _uncertainty_error("BELIEF_PROVIDER_ERROR")
+
+	# Mengambil payload data belief terbaru.
+	var belief: Dictionary = belief_result.get("data", {})
+
+	# Menyiapkan transition berdasarkan belief terbaru.
+	var transition_result = uncertainty_transition_provider.call(belief)
+
+	# Menghentikan proses jika penyediaan transisi gagal.
+	if not _uncertainty_result_is_valid(transition_result):
+		return _uncertainty_error("TRANSITION_PROVIDER_ERROR")
+
+	# Mengambil struktur transition provider dari hasil panggilan.
+	var provider: Dictionary = transition_result.get("data", {})
+
+	# Membuat model keputusan dari konfigurasi yang tersimpan.
+	var model_result = DECISION_MODEL.create_model(uncertainty_model_config)
+
+	# Menghentikan proses jika konfigurasi model keputusan tidak valid.
+	if not _uncertainty_result_is_valid(model_result):
+		return _uncertainty_error(
+			"INVALID_DECISION_MODEL",
+			model_result.get("errors", [])
+		)
+
+	# Mengambil objek model keputusan yang telah tervalidasi.
+	var model: Dictionary = model_result.get("data", {}).get("model", {})
+
+	# Memvalidasi model dan transition provider sebelum perhitungan MDP.
+	var validation_result = DECISION_MODEL.validate_model(model, provider, uncertainty_probability_tolerance)
+
+	# Menghentikan proses jika kecocokan model dan transisi gagal divalidasi.
+	if not _uncertainty_result_is_valid(validation_result):
+		return _uncertainty_error(
+			"MODEL_VALIDATION_FAILED",
+			validation_result.get("errors", [])
+		)
+
+	# Menghitung Maximum Expected Utility berdasarkan belief terkini.
+	var meu_result = _calculate_uncertainty_meu(belief)
+
+	# Menghentikan proses jika perhitungan MEU mengalami kegagalan.
+	if not _uncertainty_result_is_valid(meu_result):
+		return _uncertainty_error(
+			"MEU_CALCULATION_FAILED",
+			meu_result.get("errors", [])
+		)
+
+	# Menjalankan Value Iteration untuk memperoleh policy optimal.
+	var mdp_result = MDP_SOLVER.value_iteration(
+		model,
+		provider,
+		uncertainty_epsilon,
+		uncertainty_max_iterations,
+		uncertainty_probability_tolerance,
+		uncertainty_comparison_tolerance
+	)
+
+	# Menghentikan proses jika eksekusi Value Iteration gagal.
+	if not _uncertainty_result_is_valid(mdp_result):
+		return _uncertainty_error(
+			"MDP_CALCULATION_FAILED",
+			mdp_result.get("errors", [])
+		)
+
+	# Mengambil payload data hasil perhitungan MDP.
+	var mdp_data: Dictionary = mdp_result.get("data", {})
+
+	# Hasil yang belum konvergen tidak boleh dianggap policy optimal.
+	if mdp_data.get("status", "") != "CONVERGED":
+		return _uncertainty_error(
+			"MDP_NOT_CONVERGED",
+			mdp_result.get("errors", [])
+		)
+
+	# Menyimpan hasil sebagai rekomendasi, bukan perintah aksi.
+	uncertainty_advisory = {
+		"valid": true,
+		"belief": belief,
+		"meu": meu_result.get("data", {}),
+		"mdp": mdp_data,
+		"validation": validation_result.get("data", {}),
+		"status": "READY"
+	}
+
+	# Mengembalikan salinan lengkap hasil advisory yang telah diperbarui.
+	return {
+		"valid": true,
+		"errors": [],
+		"data": uncertainty_advisory.duplicate(true)
+	}
+
+# Menghitung Expected Utility untuk setiap alternatif tindakan
+func _calculate_uncertainty_meu(belief: Dictionary) -> Dictionary:
+	# Meminta daftar outcome untuk setiap aksi berdasarkan belief saat ini.
+	var outcome_result = uncertainty_meu_provider.call(belief)
+
+	# Menghentikan perhitungan jika provider gagal menyediakan outcome.
+	if not _uncertainty_result_is_valid(outcome_result):
+		return _uncertainty_error("MEU_OUTCOME_PROVIDER_ERROR")
+
+	# Mengambil pemetaan outcome berdasarkan ID aksi dan menyiapkan wadah hasil.
+	var outcomes_by_action: Dictionary = outcome_result.get("data", {})
+	var actions_with_utility: Dictionary = {}
+
+	# Memproses daftar outcome pada setiap kandidat aksi.
+	for action_id in outcomes_by_action:
+		var outcomes = outcomes_by_action[action_id]
+
+		# Memastikan daftar outcome untuk aksi ini berbentuk Array.
+		if not outcomes is Array:
+			return _uncertainty_error("INVALID_OUTCOMES")
+
+		# Menampung daftar outcome yang sudah dilengkapi nilai utility.
+		var prepared_outcomes: Array = []
+
+		# Memeriksa setiap outcome dan melengkapinya dengan nilai utility.
+		for outcome in outcomes:
+			# Memastikan setiap elemen outcome berbentuk Dictionary.
+			if not outcome is Dictionary:
+				return _uncertainty_error("INVALID_OUTCOME")
+
+			var outcome_id = outcome.get("id")
+
+			# Mengambil utility berdasarkan ID outcome dari utility_map.
+			var utility_result = DECISION_MODEL.get_utility(uncertainty_utility_map, outcome_id)
+
+			# Menghentikan proses jika ID outcome tidak ditemukan atau utility tidak valid.
+			if not _uncertainty_result_is_valid(utility_result):
+				return _uncertainty_error(
+					"INVALID_OUTCOME_UTILITY",
+					utility_result.get("errors", [])
+				)
+
+			# Menyusun struktur outcome lengkap dengan ID, probabilitas, dan utility.
+			prepared_outcomes.append({
+				"id": outcome_id,
+				"probability": outcome.get("probability"),
+				"utility": utility_result.get("data", {}).get("utility")
+			})
+
+		# Menyimpan daftar outcome siap hitung untuk aksi yang bersangkutan.
+		actions_with_utility[action_id] = prepared_outcomes
+
+	# Memilih alternatif dengan Maximum Expected Utility.
+	return EXPECTED_UTILITY.choose_meu(
+		actions_with_utility,
+		uncertainty_probability_tolerance,
+		uncertainty_comparison_tolerance
+	)
+
+# Memeriksa format hasil dari komponen lain
+func _uncertainty_result_is_valid(result: Variant) -> bool:
+	# Menolak jika hasil kembalian bukan Dictionary.
+	if not result is Dictionary:
+		return false
+
+	# Memastikan kunci valid tersedia dalam hasil.
+	if not result.has("valid"):
+		return false
+
+	# Memastikan kunci errors dan data tersedia dalam hasil.
+	if not result.has("errors") or not result.has("data"):
+		return false
+
+	# Mengembalikan true hanya jika status valid bernilai true secara eksplisit.
+	return result["valid"] == true
+
+# Membuat hasil error dengan format Result
+func _uncertainty_error(error_code: String, details: Array = []) -> Dictionary:
+	# Memasukkan kode error utama sebagai elemen pertama daftar error.
+	var errors: Array = [error_code]
+
+	# Menggabungkan rincian error tambahan tanpa duplikasi.
+	for detail in details:
+		if not errors.has(detail):
+			errors.append(detail)
+
+	# Mengembalikan struktur Result gagal beserta status error utama.
+	return {
+		"valid": false,
+		"errors": errors,
+		"data": {
+			"status": error_code
+		}
+	}
+
+# Mengambil seluruh hasil advisory
+func get_uncertainty_advisory() -> Dictionary:
+	# Mengembalikan salinan mendalam dari data advisory saat ini.
+	return uncertainty_advisory.duplicate(true)
+
+# Mengambil rekomendasi berdasarkan Maximum Expected Utility
+func get_uncertainty_meu_recommendation() -> Variant:
+	# Mengembalikan null jika rekomendasi belum pernah dihitung.
+	if uncertainty_advisory.is_empty():
+		return null
+
+	# Mengambil action terbaik dari hasil perhitungan MEU.
+	return uncertainty_advisory.get("meu", {}).get("best_action")
+
+# Mengambil rekomendasi policy MDP berdasarkan state
+func get_uncertainty_mdp_recommendation(state_id: String) -> Variant:
+	# Mengembalikan null jika rekomendasi belum pernah dihitung.
+	if uncertainty_advisory.is_empty():
+		return null
+
+	# Mengambil kamus policy MDP dan mencari aksi rekomendasi untuk state_id.
+	var policy: Dictionary = uncertainty_advisory.get("mdp", {}).get("policy", {})
+
+	return policy.get(state_id)
