@@ -24,10 +24,9 @@ func assign_roles(npcs: Array) -> Dictionary:
 		if npc_id == null:
 			continue
 
-		var base_power := _get_base_power(npc)
 		candidates.append({
 			"npc_id": npc_id,
-			"base_power": base_power
+			"base_power": _get_base_power(npc)
 		})
 
 	if candidates.is_empty():
@@ -40,10 +39,51 @@ func assign_roles(npcs: Array) -> Dictionary:
 	for candidate in candidates:
 		var npc_id = candidate["npc_id"]
 		result[str(npc_id)] = (
-			ROLE_LEADER if npc_id == leader_id else ROLE_FOLLOWER
+			ROLE_LEADER if str(npc_id) == str(leader_id)
+			else ROLE_FOLLOWER
 		)
 
 	return result
+
+
+func promote_after_leader_down(
+	npcs: Array,
+	current_roles: Dictionary
+) -> Dictionary:
+	var updated_roles := current_roles.duplicate(true)
+	var candidates: Array[Dictionary] = []
+
+	for npc in npcs:
+		if not npc is Dictionary:
+			continue
+
+		var npc_id = npc.get("npc_id", null)
+		if npc_id == null:
+			continue
+
+		var id := str(npc_id)
+		var current_role := str(updated_roles.get(id, ROLE_FOLLOWER))
+
+		if current_role == ROLE_LEADER:
+			if float(npc.get("hp", 0)) <= 0:
+				updated_roles[id] = ROLE_FOLLOWER
+			continue
+
+		if float(npc.get("hp", 0)) > 0:
+			candidates.append({
+				"npc_id": npc_id,
+				"base_power": _get_base_power(npc)
+			})
+
+	if candidates.is_empty():
+		return updated_roles
+
+	candidates.sort_custom(_leader_precedes)
+
+	var new_leader_id := str(candidates[0]["npc_id"])
+	updated_roles[new_leader_id] = ROLE_LEADER
+
+	return updated_roles
 
 
 func _get_base_power(npc: Dictionary) -> int:
@@ -68,4 +108,5 @@ func _numeric_id(value) -> int:
 	var text_id := str(value)
 	var parts := text_id.split("-")
 	var suffix := parts[parts.size() - 1]
+
 	return int(suffix) if suffix.is_valid_int() else 2147483647
