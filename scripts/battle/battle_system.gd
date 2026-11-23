@@ -1,4 +1,3 @@
-
 class_name BattleSystem
 extends Node
 
@@ -30,13 +29,56 @@ var next_enemy_start := 0
 # NPC yang sedang dipilih Player
 var selected_target_index := -1
 
+# Menyambungkan Automated Planning
+const PLANNING_CONTROLLER = preload("res://scripts/automated_planning/planning_controller.gd")
+var planning_controller
+var planning_turn_counter := 0
+
+# Menyambungkan MDP
+const MDPAdapter = preload("res://scripts/automated_planning/mdp_game_adapter.gd")
+var last_mdp_result: Dictionary = {}
+
+# Mode AI NPC: PLANNING atau MDP
+var npc_ai_mode: String = "PLANNING"
+#var npc_ai_mode: String = "MDP"
+
+# Inference Engine / KB / Log
+const INFERENCE_ENGINE = preload("res://scripts/kb_ie/inference_engine.gd")
+const KNOWLEDGE_BASE = preload("res://scripts/kb_ie/knowledge_base.gd")
+const INFERENCE_LOG = preload("res://scripts/kb_ie/inference_log.gd")
+var knowledge_base
+var inference_log
+var inference_engine
+var last_inference_result: Dictionary = {}
+
+
+#const BAYES_UPDATER = preload("res://scripts/bayes_belief/bayesian_updater1.gd")
+#const TRANSITION_MODEL = preload("res://scripts/bayes_belief/transition_model1.gd")
+#const UNCERTAINTY_BELIEF = preload("res://scripts/bayes_belief/uncertainty_belief1.gd")
+#
+#var bayes_updater = BAYES_UPDATER.new()
+#var transition_model = TRANSITION_MODEL.new()
+#var uncertainty_belief = UNCERTAINTY_BELIEF.new()
+#var active_bayesian_belief: Dictionary = {}
+#var last_bayesian_result: Dictionary = {}
+#var last_bayesian_evidence: String = "-"
+#var last_bayesian_status: String = "WAITING"
 
 func _ready() -> void:
+#	automated planning
+	planning_controller = PLANNING_CONTROLLER.new()
+	
+	knowledge_base = KNOWLEDGE_BASE.new()
+	inference_log = INFERENCE_LOG.new()
+	inference_engine = INFERENCE_ENGINE.new(
+	knowledge_base,
+	inference_log
+	)
 	get_viewport().physics_object_picking = true
 
 	battle_ai = BattleAI.new("minimax", 3)
-
-	var evaluation_script = preload("res://scripts/battle_evaluation.gd")
+	
+	var evaluation_script = preload("res://scripts/battle/battle_evaluation.gd")
 	evaluation = evaluation_script.new()
 
 	var root = get_parent()
@@ -80,6 +122,12 @@ func start_battle(_enemy_count: int = -1) -> void:
 	battle_running = true
 	ai_thinking = false
 	next_enemy_start = 0
+
+	# Automated planning: memastikan controller siap ketika battle dimulai
+	planning_turn_counter = 0
+	planning_controller.reset_for_new_battle()
+	#initialize_bayesian_belief()
+	planning_controller.set_planner_mode(Global.selected_pathfinding)
 
 	# Pilih NPC hidup pertama sebagai target awal.
 	selected_target_index = get_first_living_enemy()
@@ -152,7 +200,103 @@ func get_living_enemy_count() -> int:
 
 	return count
 
+# Automated Planning: adaptor untuk membaca kondisi game
+func get_planning_snapshot() -> Dictionary:
+	var planning_npcs: Array[Dictionary] = []
 
+	for i in range(enemy_nodes.size()):
+		var enemy = enemy_nodes[i]
+
+		if not is_instance_valid(enemy):
+			continue
+
+		var hp := 0
+
+		if i < state.npc_hps.size():
+			hp = state.npc_hps[i]
+
+		planning_npcs.append({
+			"npc_id": str(enemy.get_meta("planning_id", "NPC-%02d" % (i + 1))),
+			"hp": hp,
+			"role": str(enemy.get_meta("planning_role", "UNASSIGNED"))
+		})
+
+	return {
+		"npcs": planning_npcs,
+		"target_alive": state.player_hp > 0
+	}
+
+# mencari npc dari planning id
+func get_enemy_index_by_planning_id(npc_id: String) -> int:
+	for i in range(enemy_nodes.size()):
+		var enemy = enemy_nodes[i]
+
+		if not is_instance_valid(enemy):
+			continue
+
+		var enemy_planning_id := str(
+			enemy.get_meta("planning_id", "")
+		)
+
+		if enemy_planning_id == npc_id:
+			return i
+
+	return -1
+
+# membuat callback eksekusi planning
+func execute_planning_action(action: Dictionary) -> Dictionary:
+	print("EXECUTE ACTION REQUEST: ", action)
+	var npc_id := str(action.get("npc", ""))
+	var action_type := str(action.get("type", ""))
+
+	if action_type not in ["NORMAL_ATTACK", "COORDINATED_ATTACK"]:
+		return {
+			"status": "rejected",
+			"slot_completed": false,
+			"battle_over": false,
+			"reason": "unsupported_action_type"
+		}
+
+	if not battle_running or state == null:
+		return {
+			"status": "error",
+			"slot_completed": false,
+			"battle_over": true,
+			"reason": "battle_not_running"
+		}
+
+	var index := get_enemy_index_by_planning_id(npc_id)
+
+	if index == -1:
+		return {
+			"status": "rejected",
+			"slot_completed": false,
+			"battle_over": false,
+			"reason": "npc_not_found"
+		}
+
+	if index >= state.npc_hps.size() or state.npc_hps[index] <= 0:
+		return {
+			"status": "rejected",
+			"slot_completed": false,
+			"battle_over": false,
+			"reason": "npc_not_alive"
+		}
+		
+	print("NPC EXECUTING ATTACK: ", npc_id, " | INDEX: ", index)
+	
+	await attack_enemy(index)
+	
+	#run_bayesian_update("ATTACK")
+	update_battle_ui()
+
+	return {
+		"status": "executed",
+		"slot_completed": true,
+		"battle_over": state.player_hp <= 0 or get_living_enemy_count() <= 0,
+		"reason": ""
+	}
+	
 # Mendeteksi klik pada TargetArea NPC.
 func _on_target_area_input_event(
 	_viewport: Node,
@@ -295,64 +439,65 @@ func _run_npc_turn() -> void:
 	ai_thinking = true
 	update_battle_ui()
 
-	await get_tree().create_timer(0.5).timeout
+	print("=== NPC TURN: AI EVALUATION ===")
+
+	# 1. MDP: ADVISORY / DIAGNOSTIC
+	var mdp_adapter = MDPAdapter.new()
+	last_mdp_result = mdp_adapter.run_value_iteration(state)
+
+	print("=== MDP VALUE ITERATION ===")
+	print("MDP RESULT: ", last_mdp_result)
+
+	# 2. MINIMAX
+	last_minimax_result = BattleAI.new(
+		"minimax", 3
+	).get_best_action(state, evaluation)
+
+	print("=== MINIMAX RESULT ===")
+	print(last_minimax_result)
+
+	# 3. ALPHA-BETA
+	last_alpha_beta_result = BattleAI.new(
+		"alpha_beta", 3
+	).get_best_action(state, evaluation)
+
+	print("=== ALPHA-BETA RESULT ===")
+	print(last_alpha_beta_result)
 
 	if not battle_running or state == null:
 		ai_thinking = false
 		return
 
-	# Evaluasi kedua algoritma untuk eksperimen AI.
-	last_minimax_result = BattleAI.new(
-		"minimax", 3
-	).get_best_action(state, evaluation)
+	# 4. AUTOMATED PLANNING
+	#    GAMEPLAY EXECUTOR
+	print("=== PLANNING AI MODE ===")
 
-	last_alpha_beta_result = BattleAI.new(
-		"alpha_beta", 3
-	).get_best_action(state, evaluation)
+	planning_turn_counter += 1
 
-	var living_count := get_living_enemy_count()
-	var attack_limit := mini(
-		MAX_ATTACKERS_PER_ROUND,
-		living_count
+	var snapshot_debug = get_planning_snapshot()
+
+	print("=== SNAPSHOT DEBUG ===")
+	print(snapshot_debug)
+	print("NPC SNAPSHOT COUNT: ", snapshot_debug.get("npcs", []).size())
+	print("TARGET ALIVE: ", snapshot_debug.get("target_alive", false))
+
+	var planning_result: Dictionary = await planning_controller.run_npc_phase(
+		planning_turn_counter,
+		Callable(self, "get_planning_snapshot"),
+		Callable(self, "_run_inference_for_action"),
+		Callable(self, "execute_planning_action"),
+		false,
+		[],
+		-1
 	)
 
-	var attackers := 0
-	var checked := 0
-	var total_enemies := enemy_nodes.size()
+	print("PLANNING EXECUTION RESULT: ", planning_result)
+	
+	# Refresh MEU after NPC phase has completed.
+	#if planning_controller != null:
+		#var meu_refresh_result: Dictionary = planning_controller.refresh_uncertainty_advisory()
+		#print("MEU REFRESH RESULT: ", meu_refresh_result)
 
-	# Rotasi urutan penyerang.
-	while checked < total_enemies and attackers < attack_limit:
-		if not battle_running or state == null:
-			break
-
-		if state.player_hp <= 0:
-			break
-
-		var index = (next_enemy_start + checked) % total_enemies
-		checked += 1
-
-		if index >= state.npc_hps.size():
-			continue
-
-		if state.npc_hps[index] <= 0:
-			continue
-
-		await get_tree().create_timer(NPC_ATTACK_DELAY).timeout
-
-		if not battle_running or state == null:
-			break
-
-		if state.player_hp <= 0:
-			break
-
-		if state.npc_hps[index] <= 0:
-			continue
-
-		await attack_enemy(index)
-		attackers += 1
-		update_battle_ui()
-
-	next_enemy_start = (next_enemy_start + 1) % max(1, total_enemies)
 	ai_thinking = false
 
 	if not battle_running or state == null:
@@ -362,8 +507,14 @@ func _run_npc_turn() -> void:
 		finish_battle()
 		return
 
+	# 5. RETURN TO PLAYER TURN
 	state.current_turn = "PLAYER"
 	update_battle_ui()
+
+	print("=== NPC PLANNING DEBUG ===")
+	print("TURN COUNTER: ", planning_turn_counter)
+	print("CURRENT TURN: ", state.current_turn)
+	print("PLANNING RESULT: ", planning_result)
 
 	print("=== PLAYER TURN ===")
 
@@ -506,3 +657,217 @@ func _input(event: InputEvent) -> void:
 
 			KEY_P:
 				execute_action(Action.POTION, "PLAYER")
+
+func execute_mdp_action(action: String) -> void:
+	if not battle_running or state == null:
+		return
+
+	match action:
+		"ATTACK":
+			var target_index := -1
+
+			# Cari NPC hidup pertama
+			for i in range(state.npc_hps.size()):
+				if state.npc_hps[i] > 0:
+					target_index = i
+					break
+
+			if target_index != -1:
+				print("MDP DECISION: ATTACK")
+				await attack_enemy(target_index)
+
+		"DEFEND":
+			print("MDP DECISION: DEFEND")
+
+			# Semua NPC hidup memasuki kondisi defend
+			for i in range(state.npc_hps.size()):
+				if state.npc_hps[i] > 0:
+					state.npc_defendings[i] = true
+
+	update_battle_ui()
+
+# INFERENCE
+func _run_inference_for_action(action: Dictionary) -> Dictionary:
+	if inference_engine == null or planning_controller == null:
+		return {}
+
+	var planning_state: Dictionary = planning_controller.get_current_state()
+
+	var npc_id := str(action.get("npc", ""))
+	var turn := planning_turn_counter
+	var facts: Array[Dictionary] = []
+
+	var roles: Dictionary = planning_state.get("roles", {})
+	var alive_npcs: Array = planning_state.get("alive", [])
+	var resolved_npcs: Array = planning_state.get("resolved", [])
+	var coord_used: Array = planning_state.get("coord_used", [])
+
+	var leader_id := ""
+
+	for id in roles:
+		if str(roles[id]) == "LEADER":
+			leader_id = str(id)
+			break
+
+	# Fakta NPC
+	for i in range(enemy_nodes.size()):
+		var enemy = enemy_nodes[i]
+
+		if not is_instance_valid(enemy):
+			continue
+
+		var id := str(enemy.get_meta(
+			"planning_id",
+			"NPC-%02d" % (i + 1)
+		))
+
+		var hp := 0
+
+		if i < state.npc_hps.size():
+			hp = state.npc_hps[i]
+
+		facts.append({
+			"predicate": "alive",
+			"subject": id
+		} if hp > 0 else {
+			"predicate": "dead",
+			"subject": id
+		})
+
+		facts.append({
+			"predicate": "role",
+			"subject": id,
+			"value": str(roles.get(id, "UNASSIGNED"))
+		})
+
+		facts.append({
+			"predicate": "hp",
+			"subject": id,
+			"value": hp
+		})
+
+		facts.append({
+			"predicate": "max_hp",
+			"subject": id,
+			"value": MAX_HP
+		})
+
+		if id == npc_id:
+			facts.append({
+				"predicate": "has_turn",
+				"subject": id,
+				"turn": turn
+			})
+
+		if resolved_npcs.has(id):
+			facts.append({
+				"predicate": "acted",
+				"subject": id,
+				"turn": turn
+			})
+
+		if coord_used.has(id):
+			facts.append({
+				"predicate": "coordination_used",
+				"subject": id,
+				"turn": turn
+			})
+
+	# Fakta target
+	if state.player_hp > 0:
+		facts.append({
+			"predicate": "target_alive",
+			"subject": "player"
+		})
+
+	# Fakta serangan Leader
+	if leader_id != "" and planning_state.get("leader_attacked", false):
+		facts.append({
+			"predicate": "ally_attacked",
+			"subject": leader_id,
+			"turn": turn
+		})
+
+	# WAIT belum diaktifkan dalam konfigurasi planning saat ini.
+	var wait_supported := false
+
+	var result: Dictionary = inference_engine.infer(
+		facts,
+		npc_id,
+		turn,
+		wait_supported
+	)
+
+	last_inference_result = result
+
+	print("=== INFERENCE RESULT ===")
+	print(result)
+
+	return result
+
+# SET PLANNER MODE
+func set_planner_mode(mode: String) -> void:
+	if mode == Planner.MODE_UCS or mode == Planner.MODE_ASTAR:
+		planning_controller.planner_mode = mode
+		print("PLANNER MODE SET TO: ", mode)
+	else:
+		push_warning("Invalid planner mode: " + mode)
+
+
+#const BAYES_PRIOR := {
+	#"AGGRESSIVE": 0.5,
+	#"CAUTIOUS": 0.5
+#}
+#
+#const BAYES_LIKELIHOOD := {
+	#"AGGRESSIVE": {
+		#"ATTACK": 0.8,
+		#"DEFEND": 0.2
+	#},
+	#"CAUTIOUS": {
+		#"ATTACK": 0.3,
+		#"DEFEND": 0.7
+	#}
+#}
+
+#func initialize_bayesian_belief() -> void:
+	#var prior_result: Dictionary = uncertainty_belief.create_belief(
+		#BAYES_PRIOR,
+		#0.000001,
+		#"INITIAL_PRIOR",
+		#0
+	#)
+#
+	#if prior_result.get("valid", false):
+		#active_bayesian_belief = prior_result.get("data", {}).get("belief", {})
+		#last_bayesian_status = "INITIALIZED"
+	#else:
+		#last_bayesian_status = "INIT_FAILED"
+		#print("Bayesian prior init failed: ", prior_result)
+#
+#
+#func run_bayesian_update(evidence: String) -> void:
+	#if active_bayesian_belief.is_empty():
+		#initialize_bayesian_belief()
+#
+	#var result: Dictionary = bayes_updater.update_belief(
+		#active_bayesian_belief,
+		#BAYES_LIKELIHOOD,
+		#evidence,
+		#planning_turn_counter,
+		#0.000001
+	#)
+#
+	#last_bayesian_result = result
+	#last_bayesian_evidence = evidence
+#
+	#if result.get("valid", false):
+		#active_bayesian_belief = result.get(
+			#"data", {}
+		#).get("posterior", {}).duplicate(true)
+		#last_bayesian_status = "UPDATED"
+	#else:
+		#last_bayesian_status = "FAILED"
+#
+	#print("=== BAYESIAN UPDATE ===")
+	#print(result)

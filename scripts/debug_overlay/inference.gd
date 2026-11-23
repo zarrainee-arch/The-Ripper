@@ -24,8 +24,8 @@ func _ready():
 			label.add_theme_font_size_override("font_size", 12)
 			label.add_theme_color_override("font_color", Color("#D6D6D6"))
 
-	# Heading utama
-	$MarginContainer/InferenceVBox/TitleLabel.add_theme_font_size_override("font_size", 14)
-	$MarginContainer/InferenceVBox/TitleLabel.add_theme_color_override(
-		"font_color", Color("#FFFFFF")
-	)
+	## Heading utama
+	#$MarginContainer/InferenceVBox/TitleLabel.add_theme_font_size_override("font_size", 14)
+	#$MarginContainer/InferenceVBox/TitleLabel.add_theme_color_override(
+		#"font_color", Color("#FFFFFF")
+	#)

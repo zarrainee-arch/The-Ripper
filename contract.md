@@ -226,17 +226,17 @@ General flow:
 
 ```text
 Jack position
-      ↓
+	  ↓
 Start node
-      ↓
+	  ↓
 Pathfinding algorithm
-      ↓
+	  ↓
 Player position
-      ↓
+	  ↓
 Goal node
-      ↓
+	  ↓
 Final path
-      ↓
+	  ↓
 NPC follows path
 ```
 
@@ -252,12 +252,12 @@ When re-planning occurs:
 
 ```text
 New Jack position
-        +
+		+
 Current Player position
-        ↓
+		↓
    Search again
-        ↓
-    New path
+		↓
+	New path
 ```
 
 The implementation should avoid recalculating the path unnecessarily every frame.

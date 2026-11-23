@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://btrgdp3n8vvlr" path="res://Assets The Ripper/Player.png" id="9_4c57u"]
 [ext_resource type="Texture2D" uid="uid://ch60el3le0swo" path="res://Assets The Ripper/panel.png" id="9_efxa6"]
 [ext_resource type="Script" uid="uid://balm7tyraqw7t" path="res://scripts/debug_overlay.gd" id="9_kek77"]
-[ext_resource type="Script" uid="uid://crltqrq5xtgu4" path="res://scripts/battle_ui.gd" id="9_ycdy4"]
+[ext_resource type="Script" uid="uid://crltqrq5xtgu4" path="res://scripts/battle/battle_ui.gd" id="9_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bsthml0kfu4eq" path="res://Assets The Ripper/newattack.png" id="10_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://cr6otthskdth7" path="res://Assets The Ripper/The Ripper.png" id="10_efxa6"]
 [ext_resource type="Texture2D" uid="uid://df00ct6gcmt6r" path="res://Assets The Ripper/battle/Heavy_idle.png" id="11_ryguw"]
@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://ca40d24ulxlta" path="res://Assets The Ripper/battle/defend_hover.png" id="23_qsp4k"]
 [ext_resource type="Texture2D" uid="uid://dal7kalq1kbii" path="res://Assets The Ripper/battle/potion_button.png" id="24_kq58d"]
 [ext_resource type="Texture2D" uid="uid://bh7shnjbj82gu" path="res://Assets The Ripper/battle/potion_hover.png" id="25_seu75"]
+[ext_resource type="PackedScene" uid="uid://nf4vsc4ggqvg" path="res://AI_Debug_Overlay.tscn" id="29_qsp4k"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2cqfq"]
 atlas = ExtResource("7_vivmo")
@@ -761,3 +762,5 @@ autoplay = true
 
 [node name="AttackSFX" type="AudioStreamPlayer" parent="." unique_id=1659333889]
 stream = ExtResource("18_074og")
+
+[node name="AI_Debug_Overlay" parent="." unique_id=1607391637 instance=ExtResource("29_qsp4k")]

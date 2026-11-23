@@ -37,8 +37,9 @@ func _process(_delta):
 		return
 
 	if game != null and game.battle_started:
-		show_battle_debug()
+		panel.visible = false
 	else:
+		panel.visible = true
 		show_pathfinding_debug()
 
 func show_pathfinding_debug():

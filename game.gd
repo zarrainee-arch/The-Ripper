@@ -202,8 +202,11 @@ func spawn_configured_npcs(
 		var enemy: CharacterBody2D = npcs[i]
 		var role_id: String = spawned_role_ids[i]
 		var role: String = str(
-			npc_roles.get(role_id, "UNASSIGNED")
-		)
+		npc_roles.get(role_id, "UNASSIGNED")
+	)
+
+		enemy.set_meta("planning_id", role_id)
+		enemy.set_meta("planning_role", role)
 
 		add_role_label(enemy, role)
 
